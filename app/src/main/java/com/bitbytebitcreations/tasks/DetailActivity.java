@@ -57,13 +57,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
         //FAB DELAY
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mFAB.show();
-            }
-        }, 800);
+
 
 
 

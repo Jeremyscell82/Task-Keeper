@@ -9,6 +9,9 @@
 
     <string name="action_edit">Edit</string>
 
+    <!--DETAIL FRAG-->
+    <string name="priority">Priority</string>
+
 
     <!--ALERT DIALOG STRINGS-->
     <string name="dialog_cancel">CANCEL</string>
@@ -17,8 +20,14 @@
     <string name="addlist_dialog_title">Would you like to add a new list?</string>
     <string name="addlist_dialog_hint">Just add the list name below and press \'CREATE\'.</string>
     <string name="addlist_dialog_create">CREATE</string>
-
-
+    <!--PRIORITY CUSTOM DIALOG-->
+    <string name="priority_choose">Choose a priority</string>
+    <string-array name="priority_colors">
+        <item>Neutral</item>
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
 
     <string name="detail_transition">DETAIL_TRANSITION</string>
 

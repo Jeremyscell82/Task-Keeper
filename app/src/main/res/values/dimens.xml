@@ -7,7 +7,7 @@
 
     <!-- FONT -->
     <dimen name="large_font">14pt</dimen>
-    <dimen name="med_font">10pt</dimen>
+    <dimen name="med_font">8pt</dimen>
     <dimen name="small_font">6pt</dimen>
 
 
