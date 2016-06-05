@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="4dp"
+    app:cardBackgroundColor="@color/colorBlackish"
+    android:layout_margin="@dimen/card_margin"
+    android:clickable="true"
+    android:longClickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:stateListAnimator="@anim/raise"
+    android:transitionName="@string/detail_transition"
+    >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:minHeight="75dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <TextView
+                    android:id="@+id/taskDOB"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="@dimen/small_font"
+                    android:textColor="@color/colorWhite"
+                    android:text="11/23/2016"
+                    android:layout_weight="1"/>
+
+                <ImageView
+                    android:id="@+id/priority"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/yellow"
+                    android:layout_weight="1"
+                    />
+
+                <TextView
+                    android:id="@+id/taskDUE"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="@dimen/small_font"
+                    android:textColor="@color/colorWhite"
+                    android:text="01/01/2017"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/taskBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="50dp"
+                android:padding="6dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/colorBlack"
+                android:text="@string/description"
+                android:background="@color/colorWhite"
+                android:scrollIndicators="right"
+                android:maxLines="4" />
+
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+

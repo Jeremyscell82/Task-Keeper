@@ -1,0 +1,18 @@
+<resources>
+
+    <dimen name="viewPager_elevation">4dp</dimen>
+    <dimen name="card_margin">8dp</dimen>
+    <dimen name="settings_padding">12dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- FONT -->
+    <dimen name="large_font">14pt</dimen>
+    <dimen name="med_font">10pt</dimen>
+    <dimen name="small_font">6pt</dimen>
+
+
+    <!--DEFAULT DROID-->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+</resources>
