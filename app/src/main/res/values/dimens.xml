@@ -1,6 +1,7 @@
 <resources>
 
     <dimen name="viewPager_elevation">4dp</dimen>
+    <dimen name="card_TOP_margin">4dp</dimen>
     <dimen name="card_margin">8dp</dimen>
     <dimen name="settings_padding">12dp</dimen>
     <dimen name="fab_margin">16dp</dimen>

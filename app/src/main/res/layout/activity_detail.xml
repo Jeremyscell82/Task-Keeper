@@ -29,21 +29,28 @@
                     app:popupTheme="@style/AppTheme.PopupOverlay" />
 
             </android.support.design.widget.AppBarLayout>
+            <View
+                android:id="@+id/revealView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorWhite"
+                android:visibility="gone"/>
 
             <FrameLayout
                 android:id="@+id/detail_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/background">
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/fab_detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_done"
-                    android:visibility="gone"
-                    android:layout_margin="@dimen/fab_margin"
-                    android:clickable="true"
-                    android:layout_gravity="end|bottom" />
+                <!--<android.support.design.widget.FloatingActionButton-->
+                    <!--android:id="@+id/fab_detail"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:src="@drawable/ic_done"-->
+                    <!--android:visibility="gone"-->
+                    <!--android:layout_margin="@dimen/fab_margin"-->
+                    <!--android:clickable="true"-->
+                    <!--android:layout_gravity="end|bottom" />-->
 
             </FrameLayout>
 

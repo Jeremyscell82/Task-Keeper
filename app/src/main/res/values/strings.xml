@@ -12,6 +12,12 @@
     <!--DETAIL FRAG-->
     <string name="priority">Priority</string>
 
+    <!--SETTINGS FRAG-->
+    <string name="hide_fab">Hide the add floating button when scrolling up, visible when scrolling down.</string>
+
+
+
+
 
     <!--ALERT DIALOG STRINGS-->
     <string name="dialog_cancel">CANCEL</string>
