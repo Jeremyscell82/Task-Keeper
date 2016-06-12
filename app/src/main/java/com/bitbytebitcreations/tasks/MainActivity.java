@@ -74,6 +74,10 @@ public class MainActivity extends AppCompatActivity {
             mViewPager.setCurrentItem(frag);
         }
 
+        //IF NO LISTS..SHOW USER THE DIALOG
+        if (mTitleList == null)showDialog();
+
+
     }
 
     public int getCurrentFragNum(){
@@ -134,8 +138,10 @@ public class MainActivity extends AppCompatActivity {
                 String title = edt.getText().toString();
                 if (!title.isEmpty() && !title.startsWith(" ")){
                     saveTitle(title);
+                    dialog.dismiss();
                 } else {
                     showToast("What are you really trying to do?");
+                    dialog.dismiss();
                 }
 
 
@@ -164,7 +170,12 @@ public class MainActivity extends AppCompatActivity {
         controller.closeDB();
 
 //        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
-        int fragNum = mTitleList.length;
+        int fragNum;
+        if (mTitleList != null){
+            fragNum = mTitleList.length;
+        } else {
+            fragNum = 0;
+        }
         Log.i("TEST", "FRAG NUM IS: --> "+fragNum);
         Toast.makeText(this, title+" has been created.", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, DetailActivity.class);
@@ -178,16 +189,19 @@ public class MainActivity extends AppCompatActivity {
         controller.openDB(this);
         ArrayList<String[]> masterList = controller.getAllTitles();
         controller.closeDB();
-        List<String> titleList = new ArrayList<String>();
-        for (int i = 0; i < masterList.size(); i++){
-            titleList.add(masterList.get(i)[1]);
-            Log.i(TAG, "RUNNING...");
+        if (masterList != null){
+            List<String> titleList = new ArrayList<String>();
+            for (int i = 0; i < masterList.size(); i++){
+                titleList.add(masterList.get(i)[1]);
+                Log.i(TAG, "RUNNING...");
+            }
+            if (titleList.size() != 0){
+                String[] titles = new String[titleList.size()];
+                titles = titleList.toArray(titles);
+                return titles;
+            }
         }
-        if (titleList.size() != 0){
-            String[] titles = new String[titleList.size()];
-            titles = titleList.toArray(titles);
-            return titles;
-        }
+
         Log.i(TAG, "NO TITLES SAVED...");
         return null;
     }
@@ -217,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                     0,
                     finalRadius
             );
-            reveal.setDuration(300);
+            reveal.setDuration(200);
             view.setVisibility(View.VISIBLE);
             reveal.start();
 //            final Handler handler = new Handler();

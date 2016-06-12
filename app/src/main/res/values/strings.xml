@@ -6,16 +6,24 @@
     <string name="action_settings">Settings</string>
     <string name="action_delete">Delete</string>
     <string name="action_save">Save</string>
-
-    <string name="action_edit">Edit</string>
+    <string name="action_close">Close</string>
 
     <!--DETAIL FRAG-->
     <string name="priority">Priority</string>
 
     <!--SETTINGS FRAG-->
-    <string name="hide_fab">Hide the add floating button when scrolling up, visible when scrolling down.</string>
-
-
+    <string name="settings_title">Settings</string>
+    <string name="set_name">Change toolbar name</string>
+    <string name="set_theme">Change app theme</string>
+    <string name="set_fab">Hide floating add button when scrolling</string>
+    <string name="set_task_order">Set order of tasks</string>
+    <string name="set_due_time">Set default due time period</string>
+    <string name="set_due_remind">Set past due red tint indicator</string>
+    <string name="set_list_order">Change list order</string>
+    <string name="set_list_name">Change list name</string>
+    <string name="set_del_list">Delete a list and its tasks</string>
+    <string name="set_del_all">Delete ALL lists</string>
+    <string name="set_reset">Reset settings (does not effect tasks)</string>
 
 
 
@@ -37,13 +45,5 @@
 
     <string name="detail_transition">DETAIL_TRANSITION</string>
 
-    <!--DEMO-->
-    <string-array name="taskTitles">
-        <item>House Work</item>
-        <item>Work Work</item>
-        <item>Car Work</item>
-    </string-array>
-
-    <string name="description">"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"</string>
 
 </resources>

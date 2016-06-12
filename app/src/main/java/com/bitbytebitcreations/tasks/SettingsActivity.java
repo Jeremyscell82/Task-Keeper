@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.widget.CheckBox;
@@ -47,8 +49,9 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         //SETUP TOOLBAR
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
 
         //SET UP UI
@@ -101,6 +104,28 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
     }
+
+    /*
+    ========MENU========
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_close, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_close:
+                //LOAD ADD LIST DIALOG
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }/*END OF MENU*/
 
 //    public void dismissView(){
 //        //ONLY CALLED IF BUILD IS > LOLLIPOP
