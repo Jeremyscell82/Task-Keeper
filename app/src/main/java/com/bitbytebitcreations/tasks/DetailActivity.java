@@ -35,6 +35,7 @@ public class DetailActivity extends AppCompatActivity {
     MenuItem saveMenu;
     ArrayList<String[]> masterList;
     View mView;
+    int frag;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,24 +62,13 @@ public class DetailActivity extends AppCompatActivity {
         boolean newTask = getIntent().getBooleanExtra("NEW", false);
         String title = getIntent().getStringExtra("TITLE");
         String[] task = getIntent().getStringArrayExtra("TASK");
+        frag = getIntent().getIntExtra("FRAG", 0);
+        Log.i("TEST", "FRAG: " + frag);
 //        if (newTask)getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE); //ENABLE KEYBOARD
 
         getSupportActionBar().setTitle(title);
 
         loadTask(newTask, title, task);
-//
-//        mFAB = (FloatingActionButton) findViewById(R.id.fab_detail);
-//        mFAB.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(getApplicationContext(), "TASK SAVED", Toast.LENGTH_SHORT).show();
-//                //TODO SAVE TASK, REMOVE FROM STACK AND RELOAD MAIN ACTIVITY
-//                onBackPressed();
-//            }
-//        });
-        //FAB DELAY
-
-
 
 
     }
@@ -90,6 +80,7 @@ public class DetailActivity extends AppCompatActivity {
         bundle.putBoolean("NEW", newTask);
         bundle.putString("TITLE", title);
         bundle.putStringArray("TASK", task);
+        bundle.putInt("FRAG", frag);
         fragment.setArguments(bundle);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.detail_container, fragment)
@@ -102,46 +93,13 @@ public class DetailActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_detail, menu);
-//        editMenu = menu.findItem(R.id.action_edit);
-//        saveMenu = menu.findItem(R.id.action_save);
-//        saveMenu.setVisible(false);
         return true;
     }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//        switch (id){
-//            case R.id.action_save:
-//                onBackPressed();
-//                break;
-//            case R.id.action_delete:
-//                onBackPressed();
-//                break;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
-    public void setEditMode(boolean editMode){
-//        if (editMode){
-//            saveMenu.setVisible(true);
-//            editMenu.setVisible(false);
-//        } else {
-//            saveMenu.setVisible(false);
-//            editMenu.setVisible(true);
-//        }
-    }
-
 
 
     @Override
     public void onBackPressed() {
-//        mFAB.hide();
         super.onBackPressed();
     }
 

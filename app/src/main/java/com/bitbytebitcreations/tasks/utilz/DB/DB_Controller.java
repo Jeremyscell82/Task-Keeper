@@ -37,11 +37,6 @@ public class DB_Controller extends AppCompatActivity {
     public void addTitle(String title){
         DB.addRowTitles(title);
     }
-
-//    public void initialSettingsSetup(String[] settings){
-//        //CREATE SETTINGS TABLE
-//        DB.createSetting(settings);
-//    }
     public void updateTask(long rowID, String[] values){
         DB.updateRow(rowID, values);
     }

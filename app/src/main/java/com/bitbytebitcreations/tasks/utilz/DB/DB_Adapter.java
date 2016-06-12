@@ -132,7 +132,6 @@ public class DB_Adapter extends AppCompatActivity {
     GET ALL ROWS
      */
     public Cursor getAllTaskRows(){
-//        String where = null;
         Cursor cursor = null;
         cursor = DB.query(true, TABLE_TASKS
                 , USER_KEYS, null, null, null, null, null, null);
@@ -142,7 +141,6 @@ public class DB_Adapter extends AppCompatActivity {
         return cursor;
     }
     public Cursor getAllTitleRows(){
-        String where = null;
         Cursor cursor = null;
         cursor = DB.query(true, TABLE_TITLES
                 , TITLES_KEYS, null, null, null, null, null, null);
@@ -157,9 +155,7 @@ public class DB_Adapter extends AppCompatActivity {
      */
     public void deleteRow(long rowID){ //0 FOR SETTINGS , 1 FOR USERS
         String who = KEY_ID + "=" + rowID;
-        DB.delete(TABLE_TASKS
-                , who, null);
-
+        DB.delete(TABLE_TASKS, who, null);
     }
     public void deleteAllRows(){
         Cursor cursor = getAllTaskRows();

@@ -1,5 +1,7 @@
 package com.bitbytebitcreations.tasks;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -7,9 +9,11 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.INotificationSideChannel;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -45,13 +50,14 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
     int mPriority; //0 = NEUTRAL & 3 = HIGH
     //UI
     String mListName;
-//    String[] masterTask;
     int mTaskID;
     EditText mTask;
     TextView mTaskDOB;
     TextView mTaskDUE;
     ImageView mTaskPRIO;
     FloatingActionButton mFAB;
+//    CardView mCardView;
+    int mFrag;
 
 
 
@@ -65,7 +71,7 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
         setHasOptionsMenu(true);
 
         //DECLARE UI
-        CardView cardView = (CardView) view.findViewById(R.id.taskCard);
+//        mCardView = (CardView) view.findViewById(R.id.taskCard);
         mTask = (EditText) view.findViewById(R.id.taskBody);
         mTaskDOB = (TextView) view.findViewById(R.id.taskDOB);
         mTaskDUE = (TextView) view.findViewById(R.id.taskDUE);
@@ -82,6 +88,7 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
         if (bundle != null){
             mIsNewTask = bundle.getBoolean("NEW");
             mListName = bundle.getString("TITLE");
+            mFrag = bundle.getInt("FRAG");
             Log.i(TAG, "MASTER LIST: "+ mListName);
             if (mIsNewTask){
                 //SET UP AS NEW
@@ -89,27 +96,12 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
             } else {
                 //SET UP FROM DB - BUNDLE
                 String[] masterTask = bundle.getStringArray("TASK"); //CONTAINS ID
-//                mTaskLIST = task[0]; //SET ID
                 Log.i(TAG, "TASK ID: " + masterTask[0]);
                 mTaskID = Integer.valueOf(masterTask[0]);
                 setUpFromDB(masterTask);
             }
         }
 
-
-
-
-
-
-
-//        //SET LISTENERS
-//        cardView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                Log.i("TAG","ON LONG PRESS CLICKED");
-//                return false;
-//            }
-//        });
 
         //SET DATE OF BIRTH
         mTaskDOB.setOnClickListener(new View.OnClickListener() {
@@ -141,24 +133,11 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
 
 
 
-
-//        task.setCursorVisible(false);
-
         //SET DATA
 
 
         return view;
     }
-
-//    public void fabDelay(){
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mFAB.show();
-//            }
-//        }, 800);
-//    }
 
 
     /*
@@ -167,18 +146,13 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id){
             case R.id.action_save:
-                Log.i("", "wtf");
                 saveTask();
-//                onBackPressed();
                 break;
             case R.id.action_delete:
-//                onBackPressed();
+                //todo delete
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -190,8 +164,6 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
                                               SET UP AS NEW TASK
      ==============================================================================================*/
     public void setUpAsNew(){
-        Log.i(TAG, "THIS IS NEW");
-//        mFAB.hide(); //HIDE AS KEYBOARD WILL BE VISIBLE
         String currDate = (mTODAY[0]+1)+"/"+mTODAY[1]+"/"+mTODAY[2];
         String dueDate = (mTODAY[0]+2)+"/"+mTODAY[1]+"/"+mTODAY[2]; //PRESET TO ONE MONTH DUE DATES....todo make dynamic
         mTaskDOB.setText(currDate);
@@ -207,59 +179,48 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
                                             SET UP AS EXISTING TASK
      ==============================================================================================*/
     public void setUpFromDB(String[] task){
-//        fabDelay(); //DISPLAY FAB AFTER UI EFFECTS
         mTaskDOB.setText(task[2]);
         mTaskDUE.setText(task[3]);
         prioritySwitcher(Integer.parseInt(task[4]));
         mTask.setText(task[5]);
-//        for (int i = 0; i < task.length; i++){
-//            Log.i(TAG, "CURRENT TASK ITEMS: " + task[i]);
-//        }
     }
 
     /*==============================================================================================
                                             SAVE THE TASK
      ==============================================================================================*/
     public void saveTask(){
-        Log.i("TEST", "MASTER LIST: "+ mListName);
         String lis = mListName;
         String dob = (String) mTaskDOB.getText();
         String due = (String) mTaskDUE.getText();
         String pri = String.valueOf(mPriority);
-        Log.i("TEST", "PRIORITY: " + pri);
         String tas = mTask.getText().toString();
         String[] task = new String[]{lis, dob, due, pri, tas};
-        Log.i("TEST", "save task running......");
-//        for (int x = 0; x <= task.length; x++){
-//            Log.i("DETAIL FRAGMENT", task[x]);
-//        }
         controller.openDB(getActivity());
         if (mIsNewTask){
-            Log.i("TEST", "THIS IS BEING SAVED");
             controller.addTask(task);
         } else {
-            Log.i("TEST", "THIS IS BEING SAVED: " + mTaskID);
             controller.updateTask(mTaskID, task);
         }
         controller.closeDB();
-        DetailActivity activity = (DetailActivity) getActivity();
-//        activity.revealView();
-        activity.closeActivity();
+//        DetailActivity activity = (DetailActivity) getActivity();
+//        activity.onBackPressed();
+//        activity.closeActivity();
 
 
-//        ActivityOptions options = ActivityOptions.makeCustomAnimation(getActivity(), R.anim.slide_in_top, R.anim.slide_out_bottom);
-//        Intent intent = new Intent(getActivity(), MainActivity.class);
-//        startActivity(intent, options.toBundle());
-//        Intent intent = new Intent(getActivity(), MainActivity.class);
-//        startActivity(intent);
-//        getActivity().finish();
-//        getActivity().overridePendingTransition(0, R.anim.slide_out_bottom);
-//        startActivity(intent);
+//        revealView();
+
+        ActivityOptions options = ActivityOptions.makeCustomAnimation(getActivity(), R.anim.fade_in, R.anim.fade_out);
+//        View view = getActivity().findViewById(R.id.revealView);
+//        int width = view.getWidth();
+//        int height = view.getHeight();
+//        ActivityOptions options = ActivityOptions.makeScaleUpAnimation(getView(), 0, 0, 0, 0);
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        intent.putExtra("INNER", true);
+        intent.putExtra("FRAG", mFrag);
+        startActivity(intent, options.toBundle());
+
     }
 
-    public void closeTask(){
-
-    }
 
 
     /*============
@@ -323,6 +284,52 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
                 mTaskPRIO.setImageResource(R.color.red);
                 mPriority = 3;
                 break;
+        }
+    }
+
+
+    public void revealView(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            //LOLLIPOP ANIMATIONS
+            View mView = getActivity().findViewById(R.id.revealView);
+            int x = (int) mView.getWidth()/2;
+            int y = (int) mView.getHeight()/2;
+            int finalRadius = mView.getHeight();
+            final Animator reveal = ViewAnimationUtils.createCircularReveal(
+                    mView,
+                    x,
+                    y,
+                    0,
+                    finalRadius
+            );
+            reveal.setDuration(800);
+            mView.setVisibility(View.VISIBLE);
+            reveal.start();
+//            final Handler handler = new Handler();
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    launchSatellite();
+//                }
+//            }, 200);
+            reveal.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+//                    dismissView();
+                    ActivityOptions options = ActivityOptions.makeCustomAnimation(getActivity(), R.anim.fade_in, R.anim.fade_out);
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    intent.putExtra("INNER", true);
+                    startActivity(intent, options.toBundle());
+                }
+            });
+        } else {
+            //NON LOLLIPOP ANIMATIONS
+//            Log.i(TAG, "NOT RUNNING LOLLIPOP ANIMATIONS");
+//            ActivityOptions options = ActivityOptions.makeCustomAnimation(getActivity(), R.anim.fade_in, R.anim.fade_out);
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.putExtra("INNER", true);
+            startActivity(intent);
         }
     }
 

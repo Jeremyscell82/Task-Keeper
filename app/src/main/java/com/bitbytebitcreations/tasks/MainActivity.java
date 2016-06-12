@@ -44,34 +44,32 @@ public class MainActivity extends AppCompatActivity {
 
         controller = new DB_Controller();
 
+
+
+
         //LOAD UP THE VIEWPAGER
-//        ArrayList<String[]> masterList =
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         String[] titleList = getTitles();
-//        String[] taskTitles = getResources().getStringArray(R.array.taskTitles);
         ViewPager_Controller viewPager_controller = new ViewPager_Controller(getSupportFragmentManager(), titleList, this);
         mViewPager.setAdapter(viewPager_controller);
-//        setViewPager(titleList, false);
         Log.i(TAG, "MASTERLIST HAS RUN");
-
-//        mViewPager = (ViewPager) findViewById(R.id.viewPager);
-//        String[] taskTitles = getResources().getStringArray(R.array.taskTitles);
-//        ViewPager_Controller viewPager_controller = new ViewPager_Controller(getSupportFragmentManager(), MasterTitlesList, this);
-//        mViewPager.setAdapter(viewPager_controller);
-
-
-        //FLOATING ACTION BUTTON
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         View bottomSheet = findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+
+
+        //CHECK IF INNER CALL
+        boolean innerCall = getIntent().getBooleanExtra("INNER", false);
+        if (innerCall){
+            int frag = getIntent().getIntExtra("FRAG", 0);
+            Log.i(TAG, "THIS IS A INNER CALL..........."+ frag);
+            mViewPager.setCurrentItem(frag);
+        }
+
+    }
+
+    public int getCurrentFragNum(){
+        return mViewPager.getCurrentItem();
     }
 
 
@@ -87,9 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id){
             case R.id.action_add_list:
@@ -98,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_settings:
                 //LOAD SETTINGS ACTIVITY
-//                SettingsActivity settingsActivity = new SettingsActivity(this);
                 ActivityOptions options = ActivityOptions.makeCustomAnimation(this, R.anim.slide_in_top, R.anim.slide_out_bottom);
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent, options.toBundle());
@@ -110,30 +104,6 @@ public class MainActivity extends AppCompatActivity {
     public void expandBottomSheet(View v){
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
-    public void displayKeyboard(){
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-    }
-
-    public void setViewPager(String[] titles, boolean update){
-        if (!update){
-            String[] taskTitles = getResources().getStringArray(R.array.taskTitles);
-            ViewPager_Controller viewPager_controller = new ViewPager_Controller(getSupportFragmentManager(), titles, this);
-            mViewPager.setAdapter(viewPager_controller);
-        } else {
-            String[] taskTitles = getResources().getStringArray(R.array.taskTitles);
-            ViewPager_Controller viewPager_controller = new ViewPager_Controller(getSupportFragmentManager(), titles, this);
-            viewPager_controller.notifyDataSetChanged();
-        }
-
-    }
-
-//    public ArrayList<String[]> getDBData(){
-//        DB_Controller controller = new DB_Controller();
-//        controller.openDB(this);
-////        String[]
-//        ArrayList<String[]> masterList = controller.getListTasks();
-//        return masterList;
-//    }
 
     /*=============
     ADD LIST DIALOG
@@ -184,24 +154,11 @@ public class MainActivity extends AppCompatActivity {
         controller.closeDB();
         Log.i(TAG, "SAVE TITLE RAN");
         String[] titleList = getTitles();
-//        setViewPager(titleList, true);
-//        mViewPager.getAdapter().notifyDataSetChanged();
         Toast.makeText(this, title+" has been created.", Toast.LENGTH_SHORT).show();
-//        Intent intent = getIntent();
-//        finish();
-//        startActivity(intent);
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra("TITLE", title);
         intent.putExtra("NEW", true);
         startActivity(intent);
-
-//        Intent intent = new Intent();
-//        Bundle bundle = new Bundle();
-//        bundle.putString("TITLE", title);
-//        DetailActivity activity = new DetailActivity();
-//        intent.putExtra("TITLE", title);
-//        intent.setClass(this, DetailActivity.class);
-//        startActivity(intent);
     }
 
     public String[] getTitles(){
