@@ -1,9 +1,13 @@
 package com.bitbytebitcreations.tasks;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
@@ -12,9 +16,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewAnimationUtils;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -32,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     BottomSheetBehavior bottomSheetBehavior;
     DB_Controller controller;
     ViewPager mViewPager;
+    String[] mTitleList;
+
 
 
     @Override
@@ -49,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
         //LOAD UP THE VIEWPAGER
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
-        String[] titleList = getTitles();
-        ViewPager_Controller viewPager_controller = new ViewPager_Controller(getSupportFragmentManager(), titleList, this);
+        mTitleList = getTitles();
+        ViewPager_Controller viewPager_controller = new ViewPager_Controller(getSupportFragmentManager(), mTitleList, this);
         mViewPager.setAdapter(viewPager_controller);
         Log.i(TAG, "MASTERLIST HAS RUN");
 
@@ -93,9 +101,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_settings:
                 //LOAD SETTINGS ACTIVITY
-                ActivityOptions options = ActivityOptions.makeCustomAnimation(this, R.anim.slide_in_top, R.anim.slide_out_bottom);
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent, options.toBundle());
+//                ActivityOptions options = ActivityOptions.makeCustomAnimation(this, R.anim.slide_in_bottom, R.anim.fade_out);
+//                Intent intent = new Intent(this, SettingsActivity.class);
+//                startActivity(intent, options.toBundle());
+//                revealView();
+                startSettings();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -152,12 +162,15 @@ public class MainActivity extends AppCompatActivity {
         controller.openDB(this);
         controller.addTitle(title);
         controller.closeDB();
-        Log.i(TAG, "SAVE TITLE RAN");
-        String[] titleList = getTitles();
+
+//        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        int fragNum = mTitleList.length;
+        Log.i("TEST", "FRAG NUM IS: --> "+fragNum);
         Toast.makeText(this, title+" has been created.", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra("TITLE", title);
         intent.putExtra("NEW", true);
+        intent.putExtra("FRAG", fragNum);
         startActivity(intent);
     }
 
@@ -178,11 +191,72 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "NO TITLES SAVED...");
         return null;
     }
-    public ArrayList<String[]> getTasks(){
-        ArrayList<String[]> list = new ArrayList<>();
-        controller.openDB(this);
-        list = controller.getAllTasks("test");
-        controller.closeDB();
-        return list;
+//    public ArrayList<String[]> getTasks(){
+//        ArrayList<String[]> list = new ArrayList<>();
+//        controller.openDB(this);
+//        list = controller.getAllTasks("test");
+//        controller.closeDB();
+//        return list;
+//    }
+
+
+    /*
+    REVEAL VIEW CODE
+     */
+    public void revealView(){
+        final View view = findViewById(R.id.mainRevealView);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            //LOLLIPOP ANIMATIONS
+            int cx = view.getMeasuredWidth();
+            int cy = 0;
+            float finalRadius = (float) Math.hypot(cx, view.getHeight());
+            final Animator reveal = ViewAnimationUtils.createCircularReveal(
+                    view,
+                    cx,
+                    cy,
+                    0,
+                    finalRadius
+            );
+            reveal.setDuration(300);
+            view.setVisibility(View.VISIBLE);
+            reveal.start();
+//            final Handler handler = new Handler();
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    launchSatellite();
+//                }
+//            }, 200);
+            reveal.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+//                    dismissView();
+//                    closeActivity();
+                    startSettings();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.setVisibility(View.GONE);
+                        }
+                    }, 800);
+
+                }
+            });
+        } else {
+            //NON LOLLIPOP ANIMATIONS
+            Log.i(TAG, "NOT RUNNING LOLLIPOP ANIMATIONS");
+//            closeActivity();
+            startSettings();
+        }
+    }
+
+
+
+    public void startSettings(){
+        ActivityOptions options = ActivityOptions.makeCustomAnimation(this, R.anim.scale_in_corner, R.anim.fade_out);
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent, options.toBundle());
     }
 }

@@ -27,6 +27,13 @@
 
         </android.support.design.widget.AppBarLayout>
 
+        <View
+            android:id="@+id/settingsRevealView"
+            android:background="@color/colorWhite"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
 
 
         <TextView

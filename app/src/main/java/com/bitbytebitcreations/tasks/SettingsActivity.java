@@ -1,12 +1,16 @@
 package com.bitbytebitcreations.tasks;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -98,42 +102,43 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-//    public void updateSettings(){
-//        getSharedPreferences(pref_name, MODE_PRIVATE);
-//    }
-//    public
-
-//    public boolean getSavedSettings(String key){
-//        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-////        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-////        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-//        boolean setting;
-//        switch (key){
-//            case "FAB":
-//                setting = prefs.getBoolean(FAB_KEY, false);
-//                Log.i("TAG", "GET FAB VALUE: " + setting);
-//                break;
-//            default:
-//                setting = false;
-//                break;
-//        }
-////        HIDE_FAB = prefs.getBoolean(FAB, false);
-////            boolean values = new boolean[]{HIDE_FAB, false};
-//        setting = prefs.getBoolean(FAB_KEY, false);
-//        Log.i("TAG", "GET FAB VALUE: " + setting);
-//        Log.i("SETTINGS_HOLDER", "shared preferences were read: " + key + "-> " + setting);
-//        return setting;
-//    }
-
-//    public void setSavedSettings(String settingType, boolean value){
-//        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-////        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-////        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-//        SharedPreferences.Editor editor = prefs.edit();
-//        editor.putBoolean(settingType, value);
-//        editor.apply();
-////        Toast.makeText(getApplicationContext(), "Your settings have been saved", Toast.LENGTH_SHORT).show();
-//        Log.i("SETTINGS", "SHARED PREF SAVED");
+//    public void dismissView(){
+//        //ONLY CALLED IF BUILD IS > LOLLIPOP
+//        final View view = findViewById(R.id.settingsRevealView);
+//        view.setVisibility(View.VISIBLE);
+//        int x = 0;
+//        int y = 0;
+//        float initRadius = (float) Math.hypot(view.getMeasuredWidth(), view.getHeight());
+//        Animator dismiss = ViewAnimationUtils.createCircularReveal(
+//                view,
+//                x,
+//                y,
+//                initRadius,
+//                0
+//        );
+//        dismiss.setDuration(400);
+//        dismiss.addListener(new AnimatorListenerAdapter() {
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//                super.onAnimationEnd(animation);
+//                view.setVisibility(View.GONE);
+//                finish();
+//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//            }
+//        });
+//        dismiss.start();
+////        launchSatellite();
+//
 //    }
 
+    @Override
+    public void onBackPressed() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            finish();
+            overridePendingTransition(R.anim.fade_in, R.anim.scale_to_corner);
+        } else {
+            super.onBackPressed();
+        }
+
+    }
 }
