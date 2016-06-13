@@ -1,22 +1,25 @@
 package com.bitbytebitcreations.tasks;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewAnimationUtils;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.colorpicker.ColorPickerDialog;
+import com.android.colorpicker.ColorPickerSwatch;
 import com.bitbytebitcreations.tasks.utilz.Settings_Holder;
+import com.bitbytebitcreations.tasks.utilz.Theme_Applier;
 
 /**
  * Created by JeremysMac on 6/4/16.
@@ -36,17 +39,27 @@ public class SettingsActivity extends AppCompatActivity {
         final Settings_Holder settings_holder = new Settings_Holder(this);
 
         //GET SAVED SETTINGS
-        FAB_KEY = settings_holder.getFabKey();
+        FAB_KEY = getString(R.string.key_fab);
+        Log.i("TEST_FAB", "FAB KEY IS: " + FAB_KEY);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_settings);
         setSupportActionBar(toolbar);
-
+        setTheme(toolbar);
+        getSupportActionBar().setTitle(R.string.settings_title);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
+
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            getWindow().setNavigationBarColor(getResources().getColor(R.color.yellow));
+//            getWindow().setStatusBarColor(getResources().getColor(R.color.yellow));
+//        }
+//        Theme_Applier theme = new Theme_Applier();
+//        theme.applyPinkTheme(this, toolbar, false); //FALSE -- IS ON MAIN ACTIVITY
+
 
         //SETUP TOOLBAR
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -56,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         //SET UP UI
         TextView settings1 = (TextView) findViewById(R.id.textView);
-        TextView settings2 = (TextView) findViewById(R.id.textView2);
+        TextView appTheme = (TextView) findViewById(R.id.appTheme);
         TextView hideFab = (TextView) findViewById(R.id.hideFab);
         final CheckBox settings3Box = (CheckBox) findViewById(R.id.checkBox);
         settings1.setOnClickListener(new View.OnClickListener() {
@@ -66,11 +79,13 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-
-        settings2.setOnClickListener(new View.OnClickListener() {
+        assert appTheme != null;
+        appTheme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("TAG","SETTINGS TWO CLICKED...");
+                Log.i("TAG","APP THEME CLICKED...");
+//                showThemeDialog();
+                showColorPicker();
             }
         });
 
@@ -83,16 +98,16 @@ public class SettingsActivity extends AppCompatActivity {
                 if (settings3Box.isChecked()){
                     //DISABLE SETTING
                     settings3Box.setChecked(false);
-                    settings_holder.setSavedSettings(FAB_KEY, false);
+                    settings_holder.setBOOLSettings(FAB_KEY, false);
                 } else {
                     //ENABLE SETTING
                     settings3Box.setChecked(true);
-                    settings_holder.setSavedSettings(FAB_KEY, true);
+                    settings_holder.setBOOLSettings(FAB_KEY, true);
                 }
             }
         });
 
-        if (settings_holder.getSavedSettings(FAB_KEY)){
+        if (settings_holder.getFABSettings()){
             settings3Box.setChecked(true);
         }
 
@@ -103,6 +118,15 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    /* ===========SET THEME=============*/
+    private void setTheme(Toolbar toolbar){
+        Settings_Holder settings_holder = new Settings_Holder(this);
+        int theme = settings_holder.getTHEMESettings();
+        //NOW APPLY THEME
+        Theme_Applier applyTheme = new Theme_Applier();
+        applyTheme.themeManager(0, this, toolbar, true); //THEME ACTIVITY TOOLBAR IS-ON-MAIN
     }
 
     /*
@@ -126,6 +150,54 @@ public class SettingsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }/*END OF MENU*/
+
+    /*
+    APP THEME
+     */
+    public void showThemeDialog(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.theme_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        dialogBuilder.setTitle(R.string.addlist_dialog_title);
+        dialogBuilder.setMessage(R.string.addlist_dialog_hint);
+        dialogBuilder.setPositiveButton(R.string.addlist_dialog_create, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //do something with edt.getText().toString();
+            }
+        });
+        dialogBuilder.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //pass
+            }
+        });
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+    }
+
+    public void showColorPicker(){
+        ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
+        final int[] colors = {
+                getResources().getColor(R.color.colorPrimary),
+                getResources().getColor(R.color.greenPrimary),
+                getResources().getColor(R.color.redPrimary),
+                getResources().getColor(R.color.purpPrimary),
+                getResources().getColor(R.color.pinkPrimary),
+                getResources().getColor(R.color.colorBlackish)
+        };
+        int selectedColor = colors[3];
+        Log.i("TEST_COLOR","SELECTED: " + selectedColor);
+        int numOfColumns = 3;
+        colorPickerDialog.initialize(R.string.theme_dialog_message, colors, selectedColor, numOfColumns, colors.length);
+        colorPickerDialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
+            @Override
+            public void onColorSelected(int color) {
+                Log.i("TEST_THEME", "THIS IS THE COLOR: " + color);
+            }
+        });
+        colorPickerDialog.show(getFragmentManager(), "THEME");
+    }
 
 //    public void dismissView(){
 //        //ONLY CALLED IF BUILD IS > LOLLIPOP

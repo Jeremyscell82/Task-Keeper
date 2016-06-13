@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer-array name="colors">
+        <item>-12627531</item>
+        <item>-14064874</item>
+        <item>-3928819</item>
+        <item>-10021284</item>
+        <item>-4965808</item>
+    </integer-array>
+</resources>

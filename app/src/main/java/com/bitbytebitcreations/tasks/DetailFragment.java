@@ -207,6 +207,8 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
         Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.putExtra("INNER", true);
         intent.putExtra("FRAG", mFrag);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent, options.toBundle());
 
     }

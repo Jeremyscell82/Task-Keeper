@@ -167,7 +167,6 @@ public class ViewPager_Controller extends FragmentStatePagerAdapter {
 //        public void hideFabCheck(){
 //            Settings_Holder settings_holder = new Settings_Holder(getContext());
 //            String key = settings_holder.getFabKey();
-//            mHide_FAB = settings_holder.getSavedSettings(key);
 //        }
 //
 //        //TODO USE OR DELETE

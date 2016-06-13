@@ -18,4 +18,28 @@
     <color name="yellow">#fff176</color>
     <color name="orange">#ffb74d</color>
     <color name="red">#e57373</color>
+    
+    
+    <!-- THEMES -->
+    
+    <!-- GREEN THEME -->
+    <color name="greenPrimaryDark">#165900</color>
+    <color name="greenPrimary">#296316</color>
+    <color name="greenPrimaryLight">#477A35</color>
+    <color name="greenBackground">#98CC86</color>
+    <!-- RED THEME -->
+    <color name="redPrimaryDark">#e57373</color>
+    <color name="redPrimary">#c40d0d</color>
+    <color name="redPrimaryLight">#e57373</color>
+    <color name="redBackground">#e57373</color>
+    <!-- PURPLE THEME -->
+    <color name="purpPrimaryDark">#5C0050</color>
+    <color name="purpPrimary">#67165C</color>
+    <color name="purpPrimaryLight">#863C7C</color>
+    <color name="purpBackground">#BA7EB2</color>
+    <!-- PINK THEME -->
+    <color name="pinkPrimaryDark">#750F22</color>
+    <color name="pinkPrimary">#B43A50</color>
+    <color name="pinkPrimaryLight">#C3586C</color>
+    <color name="pinkBackground">#BA838D</color>
 </resources>

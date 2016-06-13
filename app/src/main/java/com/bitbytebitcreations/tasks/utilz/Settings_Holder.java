@@ -19,28 +19,56 @@ public class Settings_Holder extends AppCompatActivity{
     //SETTING KEYS
     Context context;
     private final static String PREFS_NAME = "TASKS_SETTINGS";
+
     private final static String FAB = "HIDE_FAB";
+    private final static String THEME = "THEME";
 
     public Settings_Holder(Context context){
         this.context = context;
     }
 
-    public String getFabKey(){
-        return FAB;
-    }
+//    public String getFabKey(){
+//        return FAB;
+//    }
 
+//    public int getThemeKey(){
+//
+//    }
 
-    public boolean getSavedSettings(String key){
+    /*
+    GETTERS
+     */
+    public boolean getFABSettings(){
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        boolean setting = prefs.getBoolean(FAB, false);
-        return setting;
+        boolean fab = prefs.getBoolean(FAB, false);
+        return fab;
+    }
+
+    public int getTHEMESettings(){
+        SharedPreferences preferences = context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        int theme = preferences.getInt(THEME, 0);
+        return theme;
     }
 
 
-    public void setSavedSettings(String settingType, boolean value){
+
+    /*
+    SETTERS
+     */
+
+    //FOR BOOL SETTINGS ONLY
+    public void setBOOLSettings(String settingType, boolean value){
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(settingType, value);
         editor.apply();
     }
+    //FOR INT SETTINGS ONLY
+    public void setINTSettings(String settingType, int value){
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(settingType, value);
+        editor.apply();
+    }
+
 }

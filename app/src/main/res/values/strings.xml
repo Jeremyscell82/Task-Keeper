@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Task Keeper</string>
 
+    
+
     <!--MENU ITEMS-->
     <string name="action_addlist">Add List</string>
     <string name="action_settings">Settings</string>
@@ -11,6 +13,9 @@
     <!--DETAIL FRAG-->
     <string name="priority">Priority</string>
 
+    <!-- SETTINGS KEYS -->
+    <string name="key_fab">HIDE_FAB</string>
+    <string name="key_theme">THEME</string>
     <!--SETTINGS FRAG-->
     <string name="settings_title">Settings</string>
     <string name="set_name">Change toolbar name</string>
@@ -42,6 +47,17 @@
         <item>Medium</item>
         <item>High</item>
     </string-array>
+    <!--THEME CUSTOM DIALOG-->
+    <string name="theme_dialog_title">Change color scheme</string>
+    <string name="theme_dialog_message">Pick one of the colors below to change the theme of the app</string>
+    <string-array name="theme_dialog_spinner">
+        <item>Blue</item>
+        <item>Green</item>
+        <item>Red</item>
+        <item>Purple</item>
+        <item>Pink</item>
+    </string-array>
+
 
     <string name="detail_transition">DETAIL_TRANSITION</string>
 

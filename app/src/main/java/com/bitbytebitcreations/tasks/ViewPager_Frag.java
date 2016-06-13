@@ -129,8 +129,9 @@ public class ViewPager_Frag  extends Fragment{
 
     public void hideFabCheck(){
         Settings_Holder settings_holder = new Settings_Holder(getContext());
-        String key = settings_holder.getFabKey();
-        mHide_FAB = settings_holder.getSavedSettings(key);
+//        String key = getString(R.string.key_fab);
+//        Log.i("TEST_FAB", "KEY FAB ON VIEWPAGER: " + key);
+        mHide_FAB = settings_holder.getFABSettings();
     }
 
     //TODO USE OR DELETE

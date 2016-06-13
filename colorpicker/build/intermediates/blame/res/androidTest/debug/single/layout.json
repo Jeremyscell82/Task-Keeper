@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/JeremysMac/AndroidStudioProjects/Tasks/colorpicker/build/intermediates/res/merged/androidTest/debug/layout/color_picker_swatch.xml",
+        "source": "/Users/JeremysMac/AndroidStudioProjects/Tasks/colorpicker/build/intermediates/bundles/debug/res/layout/color_picker_swatch.xml"
+    },
+    {
+        "merged": "/Users/JeremysMac/AndroidStudioProjects/Tasks/colorpicker/build/intermediates/res/merged/androidTest/debug/layout/color_picker_dialog.xml",
+        "source": "/Users/JeremysMac/AndroidStudioProjects/Tasks/colorpicker/build/intermediates/bundles/debug/res/layout/color_picker_dialog.xml"
+    }
+]

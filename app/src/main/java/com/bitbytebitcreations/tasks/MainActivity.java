@@ -9,14 +9,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,9 +24,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bitbytebitcreations.tasks.utilz.DB.DB_Controller;
+import com.bitbytebitcreations.tasks.utilz.Settings_Holder;
+import com.bitbytebitcreations.tasks.utilz.Theme_Applier;
 import com.bitbytebitcreations.tasks.utilz.ViewPager_Controller;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
         controller = new DB_Controller();
 
-
-
-
         //LOAD UP THE VIEWPAGER
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mTitleList = getTitles();
@@ -76,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
         //IF NO LISTS..SHOW USER THE DIALOG
         if (mTitleList == null)showDialog();
+        setTheme(toolbar);
+//        Theme_Applier theme = new Theme_Applier();
+//        theme.applyPinkTheme(this, toolbar, true); //TRUE FOR IS ON SETTINGS
 
 
     }
@@ -105,9 +104,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_settings:
                 //LOAD SETTINGS ACTIVITY
-//                ActivityOptions options = ActivityOptions.makeCustomAnimation(this, R.anim.slide_in_bottom, R.anim.fade_out);
-//                Intent intent = new Intent(this, SettingsActivity.class);
-//                startActivity(intent, options.toBundle());
 //                revealView();
                 startSettings();
                 break;
@@ -119,6 +115,15 @@ public class MainActivity extends AppCompatActivity {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
+    /* ===========SET THEME=============*/
+    private void setTheme(Toolbar toolbar){
+        Settings_Holder settings_holder = new Settings_Holder(this);
+        int theme = settings_holder.getTHEMESettings();
+        //NOW APPLY THEME
+        Theme_Applier applyTheme = new Theme_Applier();
+        applyTheme.themeManager(0, this, toolbar, true); //THEME ACTIVITY TOOLBAR IS-ON-MAIN
+    }
+
     /*=============
     ADD LIST DIALOG
      =============*/
@@ -128,14 +133,14 @@ public class MainActivity extends AppCompatActivity {
         final View dialogView = inflater.inflate(R.layout.addlist_dialog, null);
         dialogBuilder.setView(dialogView);
 
-        final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
+        final EditText listName = (EditText) dialogView.findViewById(R.id.titleName);
 
         dialogBuilder.setTitle(R.string.addlist_dialog_title);
         dialogBuilder.setMessage(R.string.addlist_dialog_hint);
         dialogBuilder.setPositiveButton(R.string.addlist_dialog_create, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 //do something with edt.getText().toString();
-                String title = edt.getText().toString();
+                String title = listName.getText().toString();
                 if (!title.isEmpty() && !title.startsWith(" ")){
                     saveTitle(title);
                     dialog.dismiss();
@@ -268,9 +273,13 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    /*
+    ====================== SETTINGS ======================
+     */
     public void startSettings(){
         ActivityOptions options = ActivityOptions.makeCustomAnimation(this, R.anim.scale_in_corner, R.anim.fade_out);
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent, options.toBundle());
     }
+
 }
