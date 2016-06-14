@@ -1,6 +1,7 @@
 package com.bitbytebitcreations.tasks;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -29,6 +30,8 @@ public class SettingsActivity extends AppCompatActivity {
     private final String PREFS_NAME = "SETTINGS";
     String FAB_KEY;
     boolean HIDE_FAB = false;
+    int currTheme;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,7 @@ public class SettingsActivity extends AppCompatActivity {
         FAB_KEY = getString(R.string.key_fab);
         Log.i("TEST_FAB", "FAB KEY IS: " + FAB_KEY);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_settings);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_settings);
         setSupportActionBar(toolbar);
         setTheme(toolbar);
         getSupportActionBar().setTitle(R.string.settings_title);
@@ -123,10 +126,10 @@ public class SettingsActivity extends AppCompatActivity {
     /* ===========SET THEME=============*/
     private void setTheme(Toolbar toolbar){
         Settings_Holder settings_holder = new Settings_Holder(this);
-        int theme = settings_holder.getTHEMESettings();
+        currTheme = settings_holder.getTHEMESettings();
         //NOW APPLY THEME
         Theme_Applier applyTheme = new Theme_Applier();
-        applyTheme.themeManager(0, this, toolbar, true); //THEME ACTIVITY TOOLBAR IS-ON-MAIN
+        applyTheme.themeManager(currTheme, this, toolbar, false); //THEME ACTIVITY TOOLBAR IS-ON-MAIN
     }
 
     /*
@@ -145,7 +148,11 @@ public class SettingsActivity extends AppCompatActivity {
         switch (id){
             case R.id.action_close:
                 //LOAD ADD LIST DIALOG
-                onBackPressed();
+//                onBackPressed();
+                finish();
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.scale_to_corner);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -186,7 +193,7 @@ public class SettingsActivity extends AppCompatActivity {
                 getResources().getColor(R.color.pinkPrimary),
                 getResources().getColor(R.color.colorBlackish)
         };
-        int selectedColor = colors[3];
+        int selectedColor = colors[currTheme];
         Log.i("TEST_COLOR","SELECTED: " + selectedColor);
         int numOfColumns = 3;
         colorPickerDialog.initialize(R.string.theme_dialog_message, colors, selectedColor, numOfColumns, colors.length);
@@ -194,9 +201,47 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onColorSelected(int color) {
                 Log.i("TEST_THEME", "THIS IS THE COLOR: " + color);
+                //CONVERT TO INT
+                switch (color){
+                    case -12627531:
+                        Log.i("TEST", "BLUE");
+                        applyTheme(0);
+                        break;
+                    case -14064874:
+                        Log.i("TEST", "GREEN");
+                        applyTheme(1);
+                        break;
+                    case -3928819:
+                        Log.i("TEST", "RED");
+                        applyTheme(2);
+                        break;
+                    case -10021284:
+                        Log.i("TEST", "PURP");
+                        applyTheme(3);
+                        break;
+                    case -4965808:
+                        Log.i("TEST", "PINK");
+                        applyTheme(4);
+                        break;
+                    case R.color.colorBlackish:
+                        break;
+                }
             }
         });
         colorPickerDialog.show(getFragmentManager(), "THEME");
+    }
+
+    //APPLY NEW THEME
+    public void applyTheme(int theme){
+        if (currTheme != theme){
+            Settings_Holder settings_holder = new Settings_Holder(this);
+            settings_holder.setINTSettings("THEME", theme);
+            //END AND RESTART THE ACTVIITY
+            finish();
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        }
     }
 
 //    public void dismissView(){

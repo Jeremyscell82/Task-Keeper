@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         //IF NO LISTS..SHOW USER THE DIALOG
         if (mTitleList == null)showDialog();
+        //SET THEME
         setTheme(toolbar);
 //        Theme_Applier theme = new Theme_Applier();
 //        theme.applyPinkTheme(this, toolbar, true); //TRUE FOR IS ON SETTINGS
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         int theme = settings_holder.getTHEMESettings();
         //NOW APPLY THEME
         Theme_Applier applyTheme = new Theme_Applier();
-        applyTheme.themeManager(0, this, toolbar, true); //THEME ACTIVITY TOOLBAR IS-ON-MAIN
+        applyTheme.themeManager(theme, this, toolbar, true); //THEME ACTIVITY TOOLBAR IS-ON-MAIN
     }
 
     /*=============

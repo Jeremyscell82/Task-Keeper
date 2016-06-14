@@ -20,7 +20,7 @@
     <string name="settings_title">Settings</string>
     <string name="set_name">Change toolbar name</string>
     <string name="set_theme">Change app theme</string>
-    <string name="set_fab">Hide floating add button when scrolling</string>
+    <string name="set_fab">Hide add button on scroll</string>
     <string name="set_task_order">Set order of tasks</string>
     <string name="set_due_time">Set default due time period</string>
     <string name="set_due_remind">Set past due red tint indicator</string>

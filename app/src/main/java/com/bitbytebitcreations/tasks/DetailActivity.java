@@ -20,6 +20,9 @@ import android.view.ViewAnimationUtils;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.bitbytebitcreations.tasks.utilz.Settings_Holder;
+import com.bitbytebitcreations.tasks.utilz.Theme_Applier;
+
 import java.util.ArrayList;
 
 /**
@@ -47,7 +50,7 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        setTheme(toolbar);
         //SET UP UI
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +88,15 @@ public class DetailActivity extends AppCompatActivity {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.detail_container, fragment)
                 .commit();
+    }
+
+    /* ===========SET THEME=============*/
+    private void setTheme(Toolbar toolbar){
+        Settings_Holder settings_holder = new Settings_Holder(this);
+        int theme = settings_holder.getTHEMESettings();
+        //NOW APPLY THEME
+        Theme_Applier applyTheme = new Theme_Applier();
+        applyTheme.themeManager(theme, this, toolbar, false); //THEME ACTIVITY TOOLBAR IS-ON-MAIN
     }
 
 
