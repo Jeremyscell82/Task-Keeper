@@ -114,6 +114,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void expandBottomSheet(View v){
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        }, 10000);
     }
 
     /* ===========SET THEME=============*/

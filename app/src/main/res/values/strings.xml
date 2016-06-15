@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Task Keeper</string>
-
+    <string name="version">A_0.6.1</string>
+    <string name="devStage">ALPHA</string>
     
 
     <!--MENU ITEMS-->
