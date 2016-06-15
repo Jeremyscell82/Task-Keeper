@@ -32,6 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
     boolean HIDE_FAB = false;
     int currTheme;
     Toolbar toolbar;
+    Settings_Holder settings_holder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         //SET UP THE SHARED PREFERENCE CLASS
-        final Settings_Holder settings_holder = new Settings_Holder(this);
+        settings_holder = new Settings_Holder(this);
 
         //GET SAVED SETTINGS
         FAB_KEY = getString(R.string.key_fab);
@@ -71,14 +72,25 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         //SET UP UI
-        TextView settings1 = (TextView) findViewById(R.id.textView);
+        TextView toolbarName = (TextView) findViewById(R.id.toolbarName);
         TextView appTheme = (TextView) findViewById(R.id.appTheme);
         TextView hideFab = (TextView) findViewById(R.id.hideFab);
-        final CheckBox settings3Box = (CheckBox) findViewById(R.id.checkBox);
-        settings1.setOnClickListener(new View.OnClickListener() {
+        TextView taskOrder = (TextView) findViewById(R.id.taskOrder);
+        TextView defaultTime = (TextView) findViewById(R.id.defaultTime);
+        TextView pastDue = (TextView) findViewById(R.id.pastDue);
+        TextView listOrder = (TextView) findViewById(R.id.listOrder);
+        TextView listName = (TextView) findViewById(R.id.listName);
+        final TextView dltList = (TextView) findViewById(R.id.dltList);
+        TextView dltALL = (TextView) findViewById(R.id.dltALL);
+        TextView resetSettings = (TextView) findViewById(R.id.resetSettings);
+        final CheckBox fabChkBox = (CheckBox) findViewById(R.id.checkBox);
+
+        //SET UP LISTENERS
+        assert toolbarName != null;
+        toolbarName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("TAG","SETTINGS ONE CLICKED...");
+                showToast("TOOLBAR NAME");
             }
         });
 
@@ -91,36 +103,99 @@ public class SettingsActivity extends AppCompatActivity {
                 showColorPicker();
             }
         });
-
         assert hideFab != null;
         hideFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Log.i("TAG","SETTINGS THREE CLICKED...");
-                if (settings3Box.isChecked()){
-                    //DISABLE SETTING
-                    settings3Box.setChecked(false);
-                    settings_holder.setBOOLSettings(FAB_KEY, false);
-                } else {
-                    //ENABLE SETTING
-                    settings3Box.setChecked(true);
-                    settings_holder.setBOOLSettings(FAB_KEY, true);
-                }
+                setFab(fabChkBox);
             }
         });
-
-        if (settings_holder.getFABSettings()){
-            settings3Box.setChecked(true);
-        }
-
-        settings3Box.setOnClickListener(new View.OnClickListener() {
+        assert fabChkBox != null;
+        fabChkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("TAG","SETTINGS THREE CLICKED...");
+                setFab(fabChkBox);
+            }
+        });
+        assert taskOrder != null;
+        taskOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("TASK ORDER");
+            }
+        });
+        assert defaultTime != null;
+        defaultTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("DEFAULT TIME");
+            }
+        });
+        assert pastDue != null;
+        pastDue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("PAST DUE");
+            }
+        });
+        assert listOrder != null;
+        listOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("LIST ORDER");
+            }
+        });
+        assert listName != null;
+        listName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("LIST NAME");
+            }
+        });
+        assert dltList != null;
+        dltList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("DELETE LIST");
+            }
+        });
+        assert dltALL != null;
+        dltALL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("DELETE ALL");
+            }
+        });
+        assert resetSettings != null;
+        resetSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showToast("RESET SETTINGS");
             }
         });
 
+        //SET SAVED DEFAULTS FOR FAB HIDE
+        if (settings_holder.getFABSettings()){
+            fabChkBox.setChecked(true);
+        }
+
+    }
+
+    private void setFab(CheckBox fabChkBox){
+        Log.i("TAG","SETTINGS THREE CLICKED...");
+        if (fabChkBox.isChecked()){
+            //DISABLE SETTING
+            fabChkBox.setChecked(false);
+            settings_holder.setBOOLSettings(FAB_KEY, false);
+        } else {
+            //ENABLE SETTING
+            fabChkBox.setChecked(true);
+            settings_holder.setBOOLSettings(FAB_KEY, true);
+        }
+    }
+
+    private void showToast(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     /* ===========SET THEME=============*/
@@ -158,9 +233,7 @@ public class SettingsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }/*END OF MENU*/
 
-    /*
-    APP THEME
-     */
+
     public void showThemeDialog(){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -183,6 +256,9 @@ public class SettingsActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    /*================================
+    ============APP THEME============
+    ================================*/
     public void showColorPicker(){
         ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
         final int[] colors = {
@@ -234,7 +310,7 @@ public class SettingsActivity extends AppCompatActivity {
     //APPLY NEW THEME
     public void applyTheme(int theme){
         if (currTheme != theme){
-            Settings_Holder settings_holder = new Settings_Holder(this);
+//            Settings_Holder settings_holder = new Settings_Holder(this);
             settings_holder.setINTSettings("THEME", theme);
             //END AND RESTART THE ACTVIITY
             finish();

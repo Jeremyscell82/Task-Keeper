@@ -143,6 +143,7 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
                 break;
             case R.id.action_delete:
                 //todo delete
+                deleteTask();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -192,27 +193,33 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
             controller.updateTask(mTaskID, task);
         }
         controller.closeDB();
-//        DetailActivity activity = (DetailActivity) getActivity();
-//        activity.onBackPressed();
-//        activity.closeActivity();
+        closeTask();
+    }
 
+    /*==============================================================================================
+                                            DELETE THE TASK
+     ==============================================================================================*/
+    public void deleteTask(){
+        if (!mIsNewTask){
+            controller.openDB(getActivity());
+            controller.deleteTask(mTaskID);
+            controller.closeDB();
+        }
+        closeTask();
+    }
 
-//        revealView();
-
+    /*
+    CLOSE TASK ----->> CLOSE ACTIVITY -> CLEAR STACK - ADD ANIMATIONS
+     */
+    public void closeTask(){
         ActivityOptions options = ActivityOptions.makeCustomAnimation(getActivity(), R.anim.fade_in, R.anim.scale_to_center);
-//        View view = getActivity().findViewById(R.id.revealView);
-//        int width = view.getWidth();
-//        int height = view.getHeight();
-//        ActivityOptions options = ActivityOptions.makeScaleUpAnimation(getView(), 0, 0, 0, 0);
         Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.putExtra("INNER", true);
         intent.putExtra("FRAG", mFrag);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent, options.toBundle());
-
     }
-
 
 
     /*============

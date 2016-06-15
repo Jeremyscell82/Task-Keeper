@@ -103,15 +103,12 @@ public class ViewPager_Frag  extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        mFAB.show();
         hideFabCheck();
-//        Log.i("TEST", "ON RESUME RAN");
-//        reloadData();
-//        myRecycler.getAdapter().notifyDataSetChanged();
-//        ViewPager pager = (ViewPager) getActivity().findViewById(R.id.viewPager);
-//        pager.getAdapter().notifyDataSetChanged();
-
+        //TODO SHOW FAB NOT WORKING
+        Log.i("TEST", "TEST ON RESUME");
+//        fabDelay();
     }
+
 
 //    public void reloadData(){
 //        //GET FRAGMENT TITLE
@@ -134,15 +131,17 @@ public class ViewPager_Frag  extends Fragment{
         mHide_FAB = settings_holder.getFABSettings();
     }
 
+
     //TODO USE OR DELETE
     public void fabDelay(){
+        Log.i("TEST", "FAB DELAY RUNNING");
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mFAB.show();
             }
-        }, 400);
+        }, 1000);
     }
 
 
