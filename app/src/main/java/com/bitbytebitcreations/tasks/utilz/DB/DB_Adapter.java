@@ -153,10 +153,11 @@ public class DB_Adapter extends AppCompatActivity {
     /*
     DELETE ROW
      */
-    public void deleteRow(long rowID){ //0 FOR SETTINGS , 1 FOR USERS
+    public void deleteRow(long rowID){
         String who = KEY_ID + "=" + rowID;
         DB.delete(TABLE_TASKS, who, null);
     }
+
     public void deleteAllRows(){
         Cursor cursor = getAllTaskRows();
         long rowID = cursor.getColumnIndexOrThrow(KEY_ID);

@@ -2,12 +2,10 @@ package com.bitbytebitcreations.tasks;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.ActivityOptions;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.bitbytebitcreations.tasks.utilz.Settings_Holder;
 import com.bitbytebitcreations.tasks.utilz.Theme_Applier;
@@ -93,7 +89,8 @@ public class DetailActivity extends AppCompatActivity {
     /* ===========SET THEME=============*/
     private void setTheme(Toolbar toolbar){
         Settings_Holder settings_holder = new Settings_Holder(this);
-        int theme = settings_holder.getTHEMESettings();
+        String themeKey = settings_holder.getThemeKey();
+        int theme = settings_holder.getINTSettings(themeKey);
         //NOW APPLY THEME
         Theme_Applier applyTheme = new Theme_Applier();
         applyTheme.themeManager(theme, this, toolbar, false); //THEME ACTIVITY TOOLBAR IS-ON-MAIN

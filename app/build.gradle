@@ -8,8 +8,8 @@ android {
         applicationId "com.bitbytebitcreations.tasks"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 4
-        versionName "A_0.6"
+        versionCode 6
+        versionName "A_0.7"
     }
     buildTypes {
         release {

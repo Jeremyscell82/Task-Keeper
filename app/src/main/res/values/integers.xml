@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
+    <integer name="longAnim">500</integer>
+    <integer name="medAnim">400</integer>
+    <integer name="shortAnim">200</integer>
+    <!--DEFAULT DUE DATES-->
+    <integer-array name="dueDateDays">
+        <item>1</item>
+        <item>7</item>
+        <item>14</item>
+        <item>30</item>
+    </integer-array>
+
     <!--<integer-array name="colors">-->
         <!--<item>-12627531</item>-->
         <!--<item>-14064874</item>-->

@@ -2,6 +2,7 @@ package com.bitbytebitcreations.tasks;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -13,7 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,10 +32,12 @@ public class SettingsActivity extends AppCompatActivity {
 
     private final String PREFS_NAME = "SETTINGS";
     String FAB_KEY;
-    boolean HIDE_FAB = false;
+    String PASTDUE_KEY;
+//    boolean HIDE_FAB = false;
     int currTheme;
     Toolbar toolbar;
     Settings_Holder settings_holder;
+    TextView dueTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +48,8 @@ public class SettingsActivity extends AppCompatActivity {
         settings_holder = new Settings_Holder(this);
 
         //GET SAVED SETTINGS
-        FAB_KEY = getString(R.string.key_fab);
+        FAB_KEY = settings_holder.getFabKey();
+        PASTDUE_KEY = settings_holder.getPastDueKey();
         Log.i("TEST_FAB", "FAB KEY IS: " + FAB_KEY);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar_settings);
@@ -57,40 +63,28 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-//        if (Build.VERSION.SDK_INT >= 21) {
-//            getWindow().setNavigationBarColor(getResources().getColor(R.color.yellow));
-//            getWindow().setStatusBarColor(getResources().getColor(R.color.yellow));
-//        }
-//        Theme_Applier theme = new Theme_Applier();
-//        theme.applyPinkTheme(this, toolbar, false); //FALSE -- IS ON MAIN ACTIVITY
-
-
-        //SETUP TOOLBAR
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-
-
         //SET UP UI
         TextView toolbarName = (TextView) findViewById(R.id.toolbarName);
         TextView appTheme = (TextView) findViewById(R.id.appTheme);
         TextView hideFab = (TextView) findViewById(R.id.hideFab);
         TextView taskOrder = (TextView) findViewById(R.id.taskOrder);
         TextView defaultTime = (TextView) findViewById(R.id.defaultTime);
+        dueTime = (TextView) findViewById(R.id.dueTime);
         TextView pastDue = (TextView) findViewById(R.id.pastDue);
         TextView listOrder = (TextView) findViewById(R.id.listOrder);
         TextView listName = (TextView) findViewById(R.id.listName);
         final TextView dltList = (TextView) findViewById(R.id.dltList);
         TextView dltALL = (TextView) findViewById(R.id.dltALL);
         TextView resetSettings = (TextView) findViewById(R.id.resetSettings);
-        final CheckBox fabChkBox = (CheckBox) findViewById(R.id.checkBox);
+        final Switch hideFabSwitch = (Switch) findViewById(R.id.fabCheckBox);
+        final Switch pastDueSwitch = (Switch) findViewById(R.id.pastDueChkBox);
 
         //SET UP LISTENERS
         assert toolbarName != null;
         toolbarName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("TOOLBAR NAME");
+                showNameDialog();
             }
         });
 
@@ -98,26 +92,33 @@ public class SettingsActivity extends AppCompatActivity {
         appTheme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("TAG","APP THEME CLICKED...");
-//                showThemeDialog();
-                showColorPicker();
+                showThemePicker();
             }
         });
         assert hideFab != null;
         hideFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setFab(fabChkBox);
+                if (hideFabSwitch.isChecked()){
+                    //DISABLE SETTING
+                    hideFabSwitch.setChecked(false);
+                    settings_holder.setBOOLSettings(FAB_KEY, false);
+                } else {
+                    //ENABLE SETTING
+                    hideFabSwitch.setChecked(true);
+                    settings_holder.setBOOLSettings(FAB_KEY, true);
+                }
             }
         });
-        assert fabChkBox != null;
-        fabChkBox.setOnClickListener(new View.OnClickListener() {
+        assert hideFabSwitch != null;
+        hideFabSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                setFab(fabChkBox);
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings_holder.setBOOLSettings(FAB_KEY, isChecked);
             }
         });
         assert taskOrder != null;
+        taskOrder.setTextColor(Color.GRAY);
         taskOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,16 +130,34 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showToast("DEFAULT TIME");
+                showTimeDialog();
             }
         });
         assert pastDue != null;
         pastDue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("PAST DUE");
+                if (pastDueSwitch.isChecked()){
+                    //DISABLE SETTING
+                    pastDueSwitch.setChecked(false);
+                    settings_holder.setBOOLSettings(PASTDUE_KEY, false);
+                } else {
+                    //ENABLE SETTING
+                    pastDueSwitch.setChecked(true);
+                    settings_holder.setBOOLSettings(PASTDUE_KEY, true);
+                }
             }
         });
+        assert pastDueSwitch != null;
+        pastDueSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                settings_holder.setBOOLSettings(PASTDUE_KEY, isChecked);
+            }
+        });
+
         assert listOrder != null;
+        listOrder.setTextColor(Color.GRAY);
         listOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,6 +165,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
         assert listName != null;
+        listName.setTextColor(Color.GRAY);
         listName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,6 +173,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
         assert dltList != null;
+        dltList.setTextColor(Color.GRAY);
         dltList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,6 +181,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
         assert dltALL != null;
+        dltALL.setTextColor(Color.GRAY);
         dltALL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,6 +189,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
         assert resetSettings != null;
+        resetSettings.setTextColor(Color.GRAY);
         resetSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,25 +197,26 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        //SET SAVED DEFAULTS FOR FAB HIDE
-        if (settings_holder.getFABSettings()){
-            fabChkBox.setChecked(true);
+        /* ============SET SWITCH FROM SAVED SETTINGS ==================*/
+        String fabKey = settings_holder.getFabKey();
+        if (settings_holder.getBoolSettings(fabKey)){
+            hideFabSwitch.setChecked(true);
         }
+        String pastDueKey = settings_holder.getPastDueKey();
+        if (settings_holder.getBoolSettings(pastDueKey)){
+            pastDueSwitch.setChecked(true);
+        }
+        //GET SAVED PREF FOR DEFAULT DUE DATE TIME PERIOD
+        String timeKey = settings_holder.getTimeKey();
+        int savedTime = settings_holder.getINTSettings(timeKey);
+        if (savedTime >= 0){
+            String[] defaultTimes = getResources().getStringArray(R.array.defaultTimes);
+            dueTime.setText(defaultTimes[savedTime]);
+        }
+
 
     }
 
-    private void setFab(CheckBox fabChkBox){
-        Log.i("TAG","SETTINGS THREE CLICKED...");
-        if (fabChkBox.isChecked()){
-            //DISABLE SETTING
-            fabChkBox.setChecked(false);
-            settings_holder.setBOOLSettings(FAB_KEY, false);
-        } else {
-            //ENABLE SETTING
-            fabChkBox.setChecked(true);
-            settings_holder.setBOOLSettings(FAB_KEY, true);
-        }
-    }
 
     private void showToast(String message){
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -200,8 +224,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     /* ===========SET THEME=============*/
     private void setTheme(Toolbar toolbar){
-        Settings_Holder settings_holder = new Settings_Holder(this);
-        currTheme = settings_holder.getTHEMESettings();
+        String themeKey = settings_holder.getThemeKey();
+        currTheme = settings_holder.getINTSettings(themeKey);
         //NOW APPLY THEME
         Theme_Applier applyTheme = new Theme_Applier();
         applyTheme.themeManager(currTheme, this, toolbar, false); //THEME ACTIVITY TOOLBAR IS-ON-MAIN
@@ -259,7 +283,7 @@ public class SettingsActivity extends AppCompatActivity {
     /*================================
     ============APP THEME============
     ================================*/
-    public void showColorPicker(){
+    public void showThemePicker(){
         ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
         final int[] colors = {
                 getResources().getColor(R.color.colorPrimary),
@@ -312,42 +336,99 @@ public class SettingsActivity extends AppCompatActivity {
         if (currTheme != theme){
 //            Settings_Holder settings_holder = new Settings_Holder(this);
             settings_holder.setINTSettings("THEME", theme);
-            //END AND RESTART THE ACTVIITY
-            finish();
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            masterRefresh();
         }
     }
 
-//    public void dismissView(){
-//        //ONLY CALLED IF BUILD IS > LOLLIPOP
-//        final View view = findViewById(R.id.settingsRevealView);
-//        view.setVisibility(View.VISIBLE);
-//        int x = 0;
-//        int y = 0;
-//        float initRadius = (float) Math.hypot(view.getMeasuredWidth(), view.getHeight());
-//        Animator dismiss = ViewAnimationUtils.createCircularReveal(
-//                view,
-//                x,
-//                y,
-//                initRadius,
-//                0
-//        );
-//        dismiss.setDuration(400);
-//        dismiss.addListener(new AnimatorListenerAdapter() {
-//            @Override
-//            public void onAnimationEnd(Animator animation) {
-//                super.onAnimationEnd(animation);
-//                view.setVisibility(View.GONE);
-//                finish();
-//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//            }
-//        });
-//        dismiss.start();
-////        launchSatellite();
-//
-//    }
+    /*================================
+    ============APP NAME============
+    ================================*/
+    public void showNameDialog(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.addlist_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText listName = (EditText) dialogView.findViewById(R.id.titleName);
+
+        dialogBuilder.setTitle(R.string.changeName_dialog_title);
+        dialogBuilder.setMessage(R.string.changeName_dialog_hint);
+        dialogBuilder.setNeutralButton(R.string.changeName_dialog_default, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String defaultName = getString(R.string.app_name);
+                applyName(defaultName);
+            }
+        });
+        dialogBuilder.setPositiveButton(R.string.changeName_dialog_create, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //do something with edt.getText().toString();
+                String title = listName.getText().toString();
+                if (!title.isEmpty() && !title.startsWith(" ")){
+                    applyName(title);
+                    dialog.dismiss();
+                } else {
+                    String toast = getString(R.string.dialog_error);
+                    showToast(toast);
+                    dialog.dismiss();
+                }
+
+
+            }
+        });
+        dialogBuilder.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //pass
+            }
+        });
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        dialog.show();
+    }
+    public void applyName(String name){
+        String nameKey = settings_holder.getNameKey();
+        settings_holder.setStringSettings(nameKey, name);
+        masterRefresh();
+    }
+
+    /*================================
+    ============DEFAULT TIME============
+    ================================*/
+    public void showTimeDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final String[] defaultTimes = getResources().getStringArray(R.array.defaultTimes);
+        builder.setTitle(R.string.dueTimeTitle)
+                .setItems(R.array.defaultTimes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                        dueTime.setText(defaultTimes[which]);
+                        //SAVE TO SAVED SETTINGS
+                        applyTime(which);
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    public void applyTime(int time){
+        String timeKey = settings_holder.getTimeKey();
+        settings_holder.setINTSettings(timeKey, time);
+        masterRefresh();
+    }
+
+
+    /*
+    ==========MASTER REFRESH==============
+     */
+    private void masterRefresh(){
+        //END AND RESTART THE ACTVIITY
+        finish();
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
 
     @Override
     public void onBackPressed() {

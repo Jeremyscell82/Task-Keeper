@@ -24,8 +24,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitbytebitcreations.tasks.utilz.DB.DB_Controller;
+import com.bitbytebitcreations.tasks.utilz.Settings_Holder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by JeremysMac on 6/2/16.
@@ -68,7 +72,7 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
         mTaskPRIO = (ImageView) view.findViewById(R.id.taskPRIORITY);
 
         //SET UP UI
-        mTODAY = getCurrentDate();
+//        mTODAY = getCurrentDate();
         mIsNewTask = false;
         controller = new DB_Controller();
         /*
@@ -155,15 +159,51 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
                                               SET UP AS NEW TASK
      ==============================================================================================*/
     public void setUpAsNew(){
-        String currDate = (mTODAY[0]+1)+"/"+mTODAY[1]+"/"+mTODAY[2];
-        String dueDate = (mTODAY[0]+2)+"/"+mTODAY[1]+"/"+mTODAY[2]; //PRESET TO ONE MONTH DUE DATES....todo make dynamic
+//        int dueTime = getDueDate();
+//        Log.i("TEST-TIME", "DUE TIME -->" + dueTime);
+//        String currDate = (mTODAY[0]+1)+"/"+mTODAY[1]+"/"+mTODAY[2];
+        String currDate = getCurrentDate();
         mTaskDOB.setText(currDate);
-        mTaskDUE.setText(dueDate);
+//        String dueDate = (mTODAY[0]+1)+"/"+mTODAY[1]+"/"+mTODAY[2]; //PRESET TO ONE MONTH DUE DATES....todo make dynamic
+//        getDueDate(currDate);
+//        getDueDate();
+        mTaskDUE.setText(getDueDate());
         prioritySwitcher(0);
         mTask.setText("");
         //DISPLAY KEYBOARD
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
+
+
+//    public String getDueDate(String currDate){
+//        //GET THE CURRENT DATE
+//        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+//        Date strDate = null;
+//        try {
+//            strDate = sdf.parse(currDate);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//
+//        }
+//        //GET THE SAVED DATE INT
+//        Settings_Holder settings_holder = new Settings_Holder(getActivity());
+//        String timeKey = settings_holder.getTimeKey();
+//        int dueTime = settings_holder.getINTSettings(timeKey);
+//
+//        if (strDate != null){
+//            //ADD X DAYS TO CURRENT DATE AND RETURN
+//            switch (dueTime){
+//                case 0:
+//                    int day = 7;
+//                    Calendar cal = Calendar.getInstance();
+//                    cal.setTime(strDate);
+//                    cal.add(Calendar.DATE, day);
+//                    date = cal.getTime();
+//            }
+//        }
+//
+//
+//    }
 
 
     /*==============================================================================================
@@ -225,13 +265,35 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
     /*============
     DATE FUNCTIONS
      ============*/
-    public int[] getCurrentDate(){
-        final Calendar cal = Calendar.getInstance();
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int year = cal.get(Calendar.YEAR);
-        int[] currDate = {month, day, year};
-        return currDate;
+//    public int[] getCurrentDate(){
+//        final Calendar cal = Calendar.getInstance();
+//        int month = cal.get(Calendar.MONTH);
+//        int day = cal.get(Calendar.DAY_OF_MONTH);
+//        int year = cal.get(Calendar.YEAR);
+//        int[] currDate = {month, day, year};
+//        return currDate;
+//    }
+    private String getCurrentDate(){
+        SimpleDateFormat sdfDate = new SimpleDateFormat("MM/dd/yyyy");
+        Date now = new Date();
+        String strDate = sdfDate.format(now);
+        return strDate;
+    }
+    private String getDueDate(){
+        int[] defaults = getResources().getIntArray(R.array.dueDateDays);
+        Settings_Holder settings_holder = new Settings_Holder(getActivity());
+        String timeKey = settings_holder.getTimeKey();
+        int days = defaults[settings_holder.getINTSettings(timeKey)];
+        Log.i(TAG, "DAYS SAVED INT: " + days);
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days);
+        date = cal.getTime();
+        Log.i(TAG, "DUE DATE TIME: " + date);
+        SimpleDateFormat sdfDate = new SimpleDateFormat("MM/dd/yyyy");
+        String strDate = sdfDate.format(date);
+        return strDate;
     }
 
     //CREATE DIALOG

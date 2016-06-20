@@ -1,8 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-</RelativeLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<android.support.v4.widget.NestedScrollView
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="true"
+    android:background="@android:color/white"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/card_TOP_margin"
+        android:paddingBottom="@dimen/card_TOP_margin">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+            android:id="@+id/textView2"
+            android:layout_centerHorizontal="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:orientation="horizontal"
+            android:layout_below="@id/textView2"
+            android:weightSum="2">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
+                    android:id="@+id/textView3"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Medium Text"
+                    android:id="@+id/textView4"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView2"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"/>
+            </RelativeLayout>
+
+
+        </LinearLayout>
+    </RelativeLayout>
+
+        <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:text="GREAT JOB!"-->
+        <!--android:gravity="center"-->
+        <!--android:padding="16dp"-->
+        <!--android:textAppearance="?android:attr/textAppearanceMedium"/>-->
+
+        <!--<ImageView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="250dp"-->
+        <!--android:src="@mipmap/ic_icon"-->
+        <!--android:scaleType="fitCenter"/>-->
+
+        <!--<HorizontalScrollView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="200dp"-->
+            <!--android:id="@+id/horizontalScrollView"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginBottom="@dimen/card_margin"-->
+            <!--&gt;-->
+
+            <!--<LinearLayout-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--&gt;-->
+
+                <!--<View-->
+                    <!--android:layout_width="@dimen/card_margin"-->
+                    <!--android:layout_height="match_parent"/>-->
+
+                <!--<android.support.v7.widget.CardView-->
+                    <!--android:layout_width="250dp"-->
+                    <!--android:layout_height="180dp"-->
+                    <!--app:cardElevation="@dimen/cardview_default_elevation">-->
+
+                    <!--<LinearLayout-->
+                        <!--android:orientation="vertical"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent">-->
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+                        <!--android:text="Large Text"-->
+                        <!--android:id="@+id/textView"-->
+                        <!--android:layout_margin="@dimen/card_margin"-->
+                        <!--/>-->
+
+
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:orientation="horizontal"-->
+                        <!--android:gravity="center">-->
+
+
+                        <!--<ImageButton-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:id="@+id/smsBttn"-->
+                            <!--android:src="@mipmap/ic_sms"-->
+                            <!--android:layout_below="@+id/textView"-->
+                            <!--android:layout_alignParentLeft="true"-->
+                            <!--android:layout_alignParentStart="true"/>-->
+
+                        <!--<ImageButton-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:id="@+id/emailBttn"-->
+                            <!--android:src="@mipmap/ic_email"-->
+                            <!--android:layout_alignBottom="@+id/smsBttn"-->
+                            <!--android:layout_toRightOf="@+id/smsBttn"-->
+                            <!--android:layout_toEndOf="@+id/smsBttn"/>-->
+
+                        <!--<ImageButton-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:id="@+id/shareBttn"-->
+                            <!--android:src="@mipmap/ic_share"-->
+                            <!--android:layout_alignBottom="@+id/emailBttn"-->
+                            <!--android:layout_toRightOf="@+id/emailBttn"-->
+                            <!--android:layout_toEndOf="@+id/emailBttn"/>-->
+                    <!--</LinearLayout>-->
+
+                    <!--</LinearLayout>-->
+                <!--</android.support.v7.widget.CardView>-->
+
+                <!--<View-->
+                    <!--android:layout_width="@dimen/card_margin"-->
+                    <!--android:layout_height="match_parent"/>-->
+
+
+                <!--<android.support.v7.widget.CardView-->
+                    <!--android:layout_width="200dp"-->
+                    <!--android:layout_height="180dp"-->
+                    <!--app:cardElevation="@dimen/cardview_default_elevation">-->
+
+                <!--</android.support.v7.widget.CardView>-->
+
+
+
+            <!--</LinearLayout>-->
+        <!--</HorizontalScrollView>-->
+
+</android.support.v4.widget.NestedScrollView>
+</LinearLayout>

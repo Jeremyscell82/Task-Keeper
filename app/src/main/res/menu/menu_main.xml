@@ -7,7 +7,7 @@
         android:id="@+id/action_add_list"
         android:orderInCategory="100"
         android:title="@string/action_addlist"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 
 
     <item

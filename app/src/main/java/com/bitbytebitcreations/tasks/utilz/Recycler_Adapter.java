@@ -1,15 +1,11 @@
 package com.bitbytebitcreations.tasks.utilz;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
+import android.graphics.Color;
 import android.os.Build;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,8 +19,10 @@ import com.bitbytebitcreations.tasks.DetailActivity;
 import com.bitbytebitcreations.tasks.MainActivity;
 import com.bitbytebitcreations.tasks.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 /**
  * Created by JeremysMac on 6/1/16.
@@ -53,24 +51,52 @@ public class Recycler_Adapter extends RecyclerView.Adapter<Recycler_Adapter.card
     public void onBindViewHolder(Recycler_Adapter.card_holder holder, int position) {
         //SET DATA FOR VIEW HOLDER
         holder.masterList = masterList.get(position);
-//        holder.fragNum = currFrag;
-        holder.holder_dob.setText(masterList.get(position)[2]);
-        holder.holder_due.setText(masterList.get(position)[3]);
-        switch (Integer.valueOf(masterList.get(position)[4])){
-            case 0:
-                holder.holder_priority.setImageResource(R.color.neutral);
-                break;
-            case 1:
-                holder.holder_priority.setImageResource(R.color.yellow);
-                break;
-            case 2:
-                holder.holder_priority.setImageResource(R.color.orange);
-                break;
-            case 3:
-                holder.holder_priority.setImageResource(R.color.red);
-                break;
+        holder.holder_dob.setText(masterList.get(position)[2]); //SET DOB
+        holder.holder_due.setText(masterList.get(position)[3]); //SET DUE
+        Settings_Holder settings_holder = new Settings_Holder(context);
+        String pastDueKey = settings_holder.getPastDueKey();
+        if (pastDueChecker(masterList.get(position)[3]) && settings_holder.getBoolSettings(pastDueKey)){
+            holder.holder_card.setCardBackgroundColor(Color.RED);
         }
-        holder.holder_task.setText(masterList.get(position)[5]);
+        holder.holder_priority.setImageResource(priorityFilter(masterList.get(position)[4])); //PRIORITY
+        holder.holder_task.setText(masterList.get(position)[5]); //TASK
+    }
+
+    /*
+    PRIORITY COLOR FILTER <CONVERTS STRING VALUE TO COLOR>
+     */
+    public int priorityFilter(String priority){
+        int value = Integer.valueOf(priority);
+        switch (value){
+            case 0:
+                return R.color.neutral;
+            case 1:
+                return R.color.yellow;
+            case 2:
+                return R.color.orange;
+            case 3:
+                return R.color.red;
+            default:
+                return R.color.neutral;
+        }
+    }
+
+    /*
+    PAST DUE CHECKER
+     */
+    public boolean pastDueChecker(String dueDate){
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        Date strDate = null;
+        try {
+            strDate = sdf.parse(dueDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+        if (System.currentTimeMillis() > strDate.getTime()) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -126,7 +152,7 @@ public class Recycler_Adapter extends RecyclerView.Adapter<Recycler_Adapter.card
         public boolean onLongClick(View v) {
             Log.i("CARD_HOLDER", "ON LONG CLICK PRESSED");
             MainActivity mainActivity = (MainActivity) context;
-            mainActivity.expandBottomSheet(v);
+            mainActivity.expandBottomSheet(masterList[0]);
             return true;
         }
     }

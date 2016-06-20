@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Task Keeper</string>
-    <string name="version">A_0.6.1</string>
+    <string name="version">A_0.7</string>
     <string name="devStage">ALPHA</string>
     
 
@@ -17,14 +17,15 @@
     <!-- SETTINGS KEYS -->
     <string name="key_fab">HIDE_FAB</string>
     <string name="key_theme">THEME</string>
+
     <!--SETTINGS FRAG-->
     <string name="settings_title">Settings</string>
     <string name="set_name">Change toolbar name</string>
     <string name="set_theme">Change app theme</string>
     <string name="set_fab">Hide add button on scroll</string>
     <string name="set_task_order">Set order of tasks</string>
-    <string name="set_due_time">Set default due time period</string>
-    <string name="set_due_remind">Set past due red tint indicator</string>
+    <string name="set_due_time">Set due date time</string>
+    <string name="set_due_remind">Set past due indicator</string>
     <string name="set_list_order">Change list order</string>
     <string name="set_list_name">Change list name</string>
     <string name="set_del_list">Delete a list and its tasks</string>
@@ -34,12 +35,18 @@
 
 
     <!--ALERT DIALOG STRINGS-->
+    <string name="dialog_error">What are you really trying to do?</string>
     <string name="dialog_cancel">CANCEL</string>
     <string name="dialog_ok">OK</string>
     <!--ADD LIST CUSTOM DIALOG-->
     <string name="addlist_dialog_title">Would you like to add a new list?</string>
     <string name="addlist_dialog_hint">Just add the list name below and press \'CREATE\'.</string>
     <string name="addlist_dialog_create">CREATE</string>
+    <!--CHANGE APP NAME CUSTOM DIALOG-->
+    <string name="changeName_dialog_title">Would you like to change the toolbar name?</string>
+    <string name="changeName_dialog_hint">This will change the name at the top of the main page.</string>
+    <string name="changeName_dialog_create">CHANGE</string>
+    <string name="changeName_dialog_default">DEFAULT</string>
     <!--PRIORITY CUSTOM DIALOG-->
     <string name="priority_choose">Choose a priority</string>
     <string-array name="priority_colors">
@@ -57,6 +64,24 @@
         <item>Red</item>
         <item>Purple</item>
         <item>Pink</item>
+    </string-array>
+    <!--DEFAULT TIMES DIALOG-->
+    <string name="dueTimeTitle">Choose due date time period</string>
+    <string-array name="defaultTimes">
+        <item>Day</item>
+        <item>Week</item>
+        <item>Two Weeks</item>
+        <item>Month</item>
+    </string-array>
+    <!--BOTTOM SHEET-->
+    <string name="sheet_delete">DELETE</string>
+    <string name="sheet_share">SHARE</string>
+    <!--DELETE DIALOG-->
+    <string-array name="delete_dialog">
+        <item>Are you sure?</item>
+        <item>This will delete the task and can not be undone</item>
+        <item>CANCEL</item>
+        <item>DELETE</item>
     </string-array>
 
 

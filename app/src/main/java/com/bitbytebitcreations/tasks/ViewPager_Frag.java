@@ -45,6 +45,10 @@ public class ViewPager_Frag  extends Fragment{
             mTitle = bundle.getStringArray("TITLE");
             masterList = (ArrayList<String[]>) bundle.getSerializable("TASKS"); //FILTERED FOR THIS LIST
         }
+        //GET SAVED SETTINGS
+        hideFabCheck();
+
+
         mFAB = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         mFAB_isVisible = true;
         myRecycler = (RecyclerView) view.findViewById(R.id.myRecycler);
@@ -77,7 +81,7 @@ public class ViewPager_Frag  extends Fragment{
         });
 
 
-        hideFabCheck();
+
 
 
 
@@ -126,11 +130,9 @@ public class ViewPager_Frag  extends Fragment{
 
     public void hideFabCheck(){
         Settings_Holder settings_holder = new Settings_Holder(getContext());
-//        String key = getString(R.string.key_fab);
-//        Log.i("TEST_FAB", "KEY FAB ON VIEWPAGER: " + key);
-        mHide_FAB = settings_holder.getFABSettings();
+        String fabKey = settings_holder.getFabKey();
+        mHide_FAB = settings_holder.getBoolSettings(fabKey);
     }
-
 
     //TODO USE OR DELETE
     public void fabDelay(){

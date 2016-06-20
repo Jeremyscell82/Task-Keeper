@@ -5,12 +5,14 @@
     <color name="colorPrimaryLight">#1565c0</color>
     <color name="colorAccent">#009688</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorClear">#00FFFFFF</color>
     <color name="colorOffWhite">#CFD8DC</color>
     <color name="colorBlack">#000000</color>
     <color name="colorBlackish">#BF424242</color>
     <color name="colorBlacklight">#bdbdbd</color>
     <color name="background1">#eeeeee</color>
     <color name="background">#a6d2ce</color>
+    <color name="colorRedAlpha">#99ff3333</color>
 
 
     <!--PRIORITY COLORS-->
@@ -28,7 +30,7 @@
     <color name="greenPrimaryLight">#477A35</color>
     <color name="greenBackground">#98CC86</color>
     <!-- RED THEME -->
-    <color name="redPrimaryDark">#e57373</color>
+    <color name="redPrimaryDark">#7e0808</color>
     <color name="redPrimary">#c40d0d</color>
     <color name="redPrimaryLight">#e57373</color>
     <color name="redBackground">#e57373</color>
