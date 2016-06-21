@@ -109,7 +109,6 @@ public class DB_Adapter extends AppCompatActivity {
                 , null, initialValues);
     }
 
-
     /*
     UPDATE ROW
      */
@@ -120,12 +119,11 @@ public class DB_Adapter extends AppCompatActivity {
         DB.update(TABLE_TASKS
                 , initialValues, where, null);
     }
-    public void updateTitles(long rowID, String[] setting){
+    public void updateTitles(long rowID, String setting){
         String where = KEY_ID + "=" + rowID;
         ContentValues initialValues = new ContentValues();
-        initialValues = userValues(initialValues, setting);
-        DB.update(TABLE_TASKS
-                , initialValues, where, null);
+        initialValues = titleValues(initialValues, setting);
+        DB.update(TABLE_TITLES, initialValues, where, null);
     }
 
     /*
@@ -153,18 +151,32 @@ public class DB_Adapter extends AppCompatActivity {
     /*
     DELETE ROW
      */
-    public void deleteRow(long rowID){
+    public void deleteRow(long rowID, boolean title){
         String who = KEY_ID + "=" + rowID;
-        DB.delete(TABLE_TASKS, who, null);
+        if (title){
+            DB.delete(TABLE_TITLES, who, null);
+        } else {
+            DB.delete(TABLE_TASKS, who, null);
+        }
+
     }
 
     public void deleteAllRows(){
+        //DELETE THE TASKS
         Cursor cursor = getAllTaskRows();
         long rowID = cursor.getColumnIndexOrThrow(KEY_ID);
         if (cursor.moveToFirst()){
             do {
-                deleteRow(cursor.getLong((int) rowID));
+                deleteRow(cursor.getLong((int) rowID), false); //FALSE FOR TITLE BOOLEAN
             } while (cursor.moveToNext());
+        }
+        //DELETE THE TITLES
+        Cursor cursor1 = getAllTitleRows();
+        long rowID1 = cursor1.getColumnIndexOrThrow(KEY_ID);
+        if (cursor1.moveToFirst()){
+            do {
+                deleteRow(cursor1.getLong((int) rowID1), true); //TRUE FOR TITLE BOOLEAN
+            } while (cursor1.moveToNext());
         }
     }
 

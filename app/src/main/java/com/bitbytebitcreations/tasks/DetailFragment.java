@@ -40,6 +40,7 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
     DB_Controller controller;
     boolean mIsNewTask;
     int[] mTODAY;
+    int[] mDUEDAY;
     int whcDate;
     int mPriority; //0 = NEUTRAL & 3 = HIGH
     //UI
@@ -72,7 +73,8 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
         mTaskPRIO = (ImageView) view.findViewById(R.id.taskPRIORITY);
 
         //SET UP UI
-//        mTODAY = getCurrentDate();
+        mTODAY = getTODAY();
+//        mDUEDAY = getDUEDAY();
         mIsNewTask = false;
         controller = new DB_Controller();
         /*
@@ -124,11 +126,6 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
                 datePickerDialog.show();
             }
         });
-
-
-
-        //SET DATA
-
 
         return view;
     }
@@ -265,14 +262,14 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
     /*============
     DATE FUNCTIONS
      ============*/
-//    public int[] getCurrentDate(){
-//        final Calendar cal = Calendar.getInstance();
-//        int month = cal.get(Calendar.MONTH);
-//        int day = cal.get(Calendar.DAY_OF_MONTH);
-//        int year = cal.get(Calendar.YEAR);
-//        int[] currDate = {month, day, year};
-//        return currDate;
-//    }
+    public int[] getTODAY(){
+        final Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int year = cal.get(Calendar.YEAR);
+        int[] currDate = {month, day, year};
+        return currDate;
+    }
     private String getCurrentDate(){
         SimpleDateFormat sdfDate = new SimpleDateFormat("MM/dd/yyyy");
         Date now = new Date();

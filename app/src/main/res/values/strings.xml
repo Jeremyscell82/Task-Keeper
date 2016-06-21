@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Task Keeper</string>
-    <string name="version">A_0.7</string>
+    <string name="version">A_0.8</string>
     <string name="devStage">ALPHA</string>
     
 
@@ -29,13 +29,20 @@
     <string name="set_list_order">Change list order</string>
     <string name="set_list_name">Change list name</string>
     <string name="set_del_list">Delete a list and its tasks</string>
+    <string name="set_del_usure">Choose a list to delete</string>
     <string name="set_del_all">Delete ALL lists</string>
     <string name="set_reset">Reset settings (does not effect tasks)</string>
 
 
+    <!--TOAST MESSAGES-->
+    <string name="set_del_warning">This will delete ALL tasks from that list!</string>
+    <string name="set_del_confirm">and it\'s tasks have been deleted.</string>
+    <string name="set_edit_confirm">has been updated to</string>
+    <string name="set_del_delete">ALL Tasks and Lists have been deleted.</string>
 
     <!--ALERT DIALOG STRINGS-->
     <string name="dialog_error">What are you really trying to do?</string>
+    <string name="dialog_delete">DELETE</string>
     <string name="dialog_cancel">CANCEL</string>
     <string name="dialog_ok">OK</string>
     <!--ADD LIST CUSTOM DIALOG-->
@@ -77,11 +84,32 @@
     <string name="sheet_delete">DELETE</string>
     <string name="sheet_share">SHARE</string>
     <!--DELETE DIALOG-->
+    <string-array name="delete_all_dialog">
+        <item>Are you sure?</item>
+        <item>This will delete every list and task.</item>
+        <item>CANCEL</item>
+        <item>DELETE</item>
+    </string-array>
     <string-array name="delete_dialog">
         <item>Are you sure?</item>
         <item>This will delete the task and can not be undone</item>
         <item>CANCEL</item>
         <item>DELETE</item>
+    </string-array>
+    <string-array name="set_del_dialog">
+        <item>Choose a list to delete, this will delete it\'s tasks as well.</item>
+        <item>CANCEL</item>
+        <item>DELETE</item>
+    </string-array>
+    <string-array name="set_edit_dialog">
+        <item>Choose a list to edit</item>
+        <item>CANCEL</item>
+        <item>EDIT</item>
+    </string-array>
+    <string-array name="set_edit_dialog2">
+        <item>Enter the list\'s new name</item>
+        <item>CANCEL</item>
+        <item>SAVE</item>
     </string-array>
 
 

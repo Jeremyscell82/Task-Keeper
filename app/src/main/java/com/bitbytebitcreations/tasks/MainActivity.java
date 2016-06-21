@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String[]> masterList = controller.getAllTitles();
         controller.closeDB();
         if (masterList != null){
-            List<String> titleList = new ArrayList<String>();
+            List<String> titleList = new ArrayList<>();
             for (int i = 0; i < masterList.size(); i++){
                 titleList.add(masterList.get(i)[1]);
                 Log.i(TAG, "RUNNING...");

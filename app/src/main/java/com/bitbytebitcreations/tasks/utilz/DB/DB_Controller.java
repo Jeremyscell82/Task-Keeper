@@ -40,7 +40,29 @@ public class DB_Controller extends AppCompatActivity {
     public void updateTask(long rowID, String[] values){
         DB.updateRow(rowID, values);
     }
-
+    public void updateTitle(long rowID, String title, String oldTitle){
+        DB.updateTitles(rowID, title);
+        //UPDATE TASK DB 'LIST'
+        updateTaskTitles(title, oldTitle);
+    }
+    public void updateTaskTitles(String title, String oldTitle){
+        ArrayList<String[]> masterList = getAllTasks(oldTitle);
+        //FOR LOOP TO CHANGE EACH ENTRY
+        DB.open();
+        for (int i =0; masterList.size() > i; i++){
+            String[] task = masterList.get(i);
+            String[] newTask = {
+                    title, //NEW TITLE
+                    task[2],
+                    task[3],
+                    task[4],
+                    task[5]
+            };
+            long rowID = Long.parseLong(task[0]);
+            DB.updateRow(rowID, newTask);
+        }
+        DB.close();
+    }
     /*
     DB READ
      */
@@ -92,16 +114,24 @@ public class DB_Controller extends AppCompatActivity {
     DB DELETE
      */
     public void deleteTask(long rowID){
-        DB.deleteRow(rowID);
+        DB.deleteRow(rowID, false); //FALSE FOR TITLES
+    }
+    public void deleteTitle(long rowID, String title){
+        //DELETE FROM TITLE DB
+        DB.deleteRow(rowID, true); //TRUE FOR TITLES
+        ArrayList<String[]> masterList = getAllTasks(title);
+        for (int i = 0; masterList.size() > i; i++){
+            long currID = Long.parseLong(masterList.get(i)[0]);
+            //DELETE FROM TASK DB
+            DB.deleteRow(currID, false);
+            Log.i(TAG, "COUNT EM....");
+        }
     }
     //!!!!!MASTER RESET OF USER DATA!!!!!!
     public void deleteAllTasks(){
         DB.deleteAllRows();
     }
 
-    /*
-    PREP DATA
-     */
 
 
 }

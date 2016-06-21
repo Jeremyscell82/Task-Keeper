@@ -22,14 +22,19 @@ import android.widget.Toast;
 
 import com.android.colorpicker.ColorPickerDialog;
 import com.android.colorpicker.ColorPickerSwatch;
+import com.bitbytebitcreations.tasks.utilz.DB.DB_Controller;
 import com.bitbytebitcreations.tasks.utilz.Settings_Holder;
 import com.bitbytebitcreations.tasks.utilz.Theme_Applier;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by JeremysMac on 6/4/16.
  */
 public class SettingsActivity extends AppCompatActivity {
 
+    private final String TAG = "SETTINGS";
     private final String PREFS_NAME = "SETTINGS";
     String FAB_KEY;
     String PASTDUE_KEY;
@@ -80,6 +85,7 @@ public class SettingsActivity extends AppCompatActivity {
         final Switch pastDueSwitch = (Switch) findViewById(R.id.pastDueChkBox);
 
         //SET UP LISTENERS
+        //TOOLBAR NAME
         assert toolbarName != null;
         toolbarName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +101,7 @@ public class SettingsActivity extends AppCompatActivity {
                 showThemePicker();
             }
         });
+
         assert hideFab != null;
         hideFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +117,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+
         assert hideFabSwitch != null;
         hideFabSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -117,6 +125,7 @@ public class SettingsActivity extends AppCompatActivity {
                 settings_holder.setBOOLSettings(FAB_KEY, isChecked);
             }
         });
+
         assert taskOrder != null;
         taskOrder.setTextColor(Color.GRAY);
         taskOrder.setOnClickListener(new View.OnClickListener() {
@@ -125,14 +134,15 @@ public class SettingsActivity extends AppCompatActivity {
                 showToast("TASK ORDER");
             }
         });
+
         assert defaultTime != null;
         defaultTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("DEFAULT TIME");
                 showTimeDialog();
             }
         });
+
         assert pastDue != null;
         pastDue.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +158,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+
         assert pastDueSwitch != null;
         pastDueSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -164,28 +175,26 @@ public class SettingsActivity extends AppCompatActivity {
                 showToast("LIST ORDER");
             }
         });
+
         assert listName != null;
-        listName.setTextColor(Color.GRAY);
         listName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("LIST NAME");
+                showTitleDialog(false); //DISPLAY LIST BUT DONT DELETE
             }
         });
         assert dltList != null;
-        dltList.setTextColor(Color.GRAY);
         dltList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("DELETE LIST");
+                showTitleDialog(true); //DELETE LIST & TASKS
             }
         });
         assert dltALL != null;
-        dltALL.setTextColor(Color.GRAY);
         dltALL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("DELETE ALL");
+                showDeleteDialog();
             }
         });
         assert resetSettings != null;
@@ -400,12 +409,12 @@ public class SettingsActivity extends AppCompatActivity {
         builder.setTitle(R.string.dueTimeTitle)
                 .setItems(R.array.defaultTimes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // The 'which' argument contains the index position
-                        // of the selected item
+                        showToast(defaultTimes[which]+" has been saved");
+                        dialog.dismiss();
                         dueTime.setText(defaultTimes[which]);
                         //SAVE TO SAVED SETTINGS
                         applyTime(which);
-                        dialog.dismiss();
+
                     }
                 });
         AlertDialog dialog = builder.create();
@@ -415,6 +424,153 @@ public class SettingsActivity extends AppCompatActivity {
         String timeKey = settings_holder.getTimeKey();
         settings_holder.setINTSettings(timeKey, time);
         masterRefresh();
+    }
+
+    /*=============================================
+    ============EDIT/DELETE LIST TITLES============
+    =============================================*/
+    public void showTitleDialog(final boolean delete){
+        showToast(getString(R.string.set_del_warning));
+        String[] dialogTitle;
+        final ArrayList<String[]> masterList = getTitles();
+        final String[] titles = filterTitles(masterList);
+        if (delete){
+            dialogTitle = getResources().getStringArray(R.array.set_del_dialog);
+        } else {
+            dialogTitle = getResources().getStringArray(R.array.set_edit_dialog);
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(dialogTitle[0])
+                .setSingleChoiceItems(titles, 0, null)
+                .setPositiveButton(dialogTitle[2], new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int selected = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
+//                        Log.i(TAG, "TESTING : " + masterList.size());
+//                        showToast(masterList.get(1)[selected]);
+                        long rowID = Long.parseLong(masterList.get(selected)[0]);
+                        if (delete){
+                            deleteTitle(rowID, masterList.get(selected)[1]);
+                        } else {
+                            showEditDialog(rowID, masterList.get(selected)[1]);
+                        }
+
+                    }
+                })
+                .setNegativeButton(dialogTitle[1], new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    private void showEditDialog(final long rowID, final String oldTitle){
+        String[] editDialog = getResources().getStringArray(R.array.set_edit_dialog2);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.addlist_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText listName = (EditText) dialogView.findViewById(R.id.titleName);
+
+        dialogBuilder.setTitle(editDialog[0]);
+//        dialogBuilder.setMessage(R.string.addlist_dialog_hint);
+        dialogBuilder.setPositiveButton(editDialog[2], new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //do something with edt.getText().toString();
+                String title = listName.getText().toString();
+                if (!title.isEmpty() && !title.startsWith(" ")){
+                    updateTitle(rowID, title, oldTitle);
+                    dialog.dismiss();
+                } else {
+                    showToast("What are you really trying to do?");
+                    dialog.dismiss();
+                }
+            }
+        });
+        dialogBuilder.setNegativeButton(editDialog[1], new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //pass
+            }
+        });
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        dialog.show();
+    }
+    public void showDeleteDialog(){
+        String[] message = getResources().getStringArray(R.array.delete_all_dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(message[0])
+                .setMessage(message[1])
+                .setNegativeButton(message[2], new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(message[3], new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteALL();
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    //DELETE
+    public void deleteTitle(long rowID, String title){
+        DB_Controller db = new DB_Controller();
+        db.openDB(this);
+        db.deleteTitle(rowID, title);
+        db.closeDB();
+        String message = title + " " + getString(R.string.set_del_confirm);
+        showToast(message);
+    }
+    //UPDATE
+    public void updateTitle(long rowID, String title, String oldTitle){
+        DB_Controller db = new DB_Controller();
+        db.openDB(this);
+        //UPDATE TITLE DB
+        db.updateTitle(rowID, title, oldTitle);
+        db.closeDB();
+        String message = oldTitle + " " + getString(R.string.set_edit_confirm) + " " + title;
+        showToast(message);
+    }
+
+    /*=============================================
+    ===========GET TITLES FROM TITLE DB===========
+    =============================================*/
+    public void deleteALL(){
+        DB_Controller controller = new DB_Controller();
+        controller.openDB(this);
+        controller.deleteAllTasks();
+        controller.closeDB();
+        showToast(getString(R.string.set_del_delete));
+    }
+
+    /*=============================================
+    ===========GET TITLES FROM TITLE DB===========
+    =============================================*/
+    private ArrayList<String[]> getTitles(){
+        DB_Controller controller = new DB_Controller();
+        controller.openDB(this);
+        ArrayList<String[]> masterList = controller.getAllTitles();
+        controller.closeDB();
+        return masterList;
+    }
+    private String[] filterTitles(ArrayList<String[]> masterList){
+        List<String> titleList = new ArrayList<>();
+        for (int i = 0; masterList.size() > i; i++){
+            titleList.add(masterList.get(i)[1]);
+            Log.i(TAG, "TITLE : " + titleList);
+        }
+        String[] myTitles = new String[titleList.size()];
+        myTitles = titleList.toArray(myTitles);
+        return myTitles;
     }
 
 
@@ -438,6 +594,5 @@ public class SettingsActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
-
     }
 }
