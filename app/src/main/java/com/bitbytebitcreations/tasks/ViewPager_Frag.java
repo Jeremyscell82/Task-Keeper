@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.bitbytebitcreations.tasks.utilz.Recycler_Adapter;
 import com.bitbytebitcreations.tasks.utilz.Settings_Holder;
+import com.bitbytebitcreations.tasks.utilz.Task_Object;
 
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ public class ViewPager_Frag  extends Fragment{
     boolean mHide_FAB;
     boolean mFAB_isVisible;
     RecyclerView myRecycler;
-    ArrayList<String[]> masterList;
+    ArrayList<Task_Object> masterList;
     private String[] mTitle;
 
 
@@ -43,7 +44,7 @@ public class ViewPager_Frag  extends Fragment{
         Bundle bundle = getArguments();
         if (bundle != null){
             mTitle = bundle.getStringArray("TITLE");
-            masterList = (ArrayList<String[]>) bundle.getSerializable("TASKS"); //FILTERED FOR THIS LIST
+            masterList = (ArrayList<Task_Object>) bundle.getSerializable("TASKS"); //FILTERED FOR THIS LIST
         }
         //GET SAVED SETTINGS
         hideFabCheck();

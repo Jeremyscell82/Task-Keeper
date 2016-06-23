@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.bitbytebitcreations.tasks.utilz.DB.DB_Controller;
 import com.bitbytebitcreations.tasks.utilz.Settings_Holder;
+import com.bitbytebitcreations.tasks.utilz.Task_Object;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,7 +46,7 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
     int mPriority; //0 = NEUTRAL & 3 = HIGH
     //UI
     String mListName;
-    int mTaskID;
+    long mTaskID;
     EditText mTask;
     TextView mTaskDOB;
     TextView mTaskDUE;
@@ -91,10 +92,10 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
                 setUpAsNew();
             } else {
                 //SET UP FROM DB - BUNDLE
-                String[] masterTask = bundle.getStringArray("TASK"); //CONTAINS ID
-                Log.i(TAG, "TASK ID: " + masterTask[0]);
-                mTaskID = Integer.valueOf(masterTask[0]);
-                setUpFromDB(masterTask);
+                Task_Object task = (Task_Object) bundle.getSerializable("TASK"); //CONTAINS ID
+                Log.i(TAG, "TASK ID: " + task.rowID);
+                mTaskID = task.rowID;
+                setUpFromDB(task);
             }
         }
 
@@ -206,23 +207,35 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
     /*==============================================================================================
                                             SET UP AS EXISTING TASK
      ==============================================================================================*/
-    public void setUpFromDB(String[] task){
-        mTaskDOB.setText(task[2]);
-        mTaskDUE.setText(task[3]);
-        prioritySwitcher(Integer.parseInt(task[4]));
-        mTask.setText(task[5]);
+    public void setUpFromDB(Task_Object task){
+        mTaskDOB.setText(task.dobDate);
+        mTaskDUE.setText(task.dueDate);
+        prioritySwitcher(task.priority);
+        mTask.setText(task.body);
     }
 
     /*==============================================================================================
                                             SAVE THE TASK
      ==============================================================================================*/
     public void saveTask(){
-        String lis = mListName;
-        String dob = (String) mTaskDOB.getText();
-        String due = (String) mTaskDUE.getText();
-        String pri = String.valueOf(mPriority);
-        String tas = mTask.getText().toString();
-        String[] task = new String[]{lis, dob, due, pri, tas};
+        Task_Object task = new Task_Object();
+        task.setListName(mListName);
+        task.setDobDate((String) mTaskDOB.getText());
+        task.setPriority(mPriority);
+        task.setDueDate((String) mTaskDUE.getText());
+        task.setTask(mTask.getText().toString());
+
+
+
+
+//        String lis = mListName;
+//        String dob = (String) mTaskDOB.getText();
+//        String due = (String) mTaskDUE.getText();
+//        String pri = String.valueOf(mPriority);
+//        String tas = mTask.getText().toString();
+//        String[] task = new String[]{lis, dob, due, pri, tas};
+
+
         controller.openDB(getActivity());
         if (mIsNewTask){
             controller.addTask(task);

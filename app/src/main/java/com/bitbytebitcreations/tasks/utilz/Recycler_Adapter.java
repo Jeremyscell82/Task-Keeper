@@ -19,6 +19,7 @@ import com.bitbytebitcreations.tasks.DetailActivity;
 import com.bitbytebitcreations.tasks.MainActivity;
 import com.bitbytebitcreations.tasks.R;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,9 +32,9 @@ public class Recycler_Adapter extends RecyclerView.Adapter<Recycler_Adapter.card
 
     private final String TAG = "RECYCLER";
     private Context context;
-    private ArrayList<String[]> masterList;
+    private ArrayList<Task_Object> masterList;
 
-    public Recycler_Adapter(Context activity, ArrayList<String[]> list){
+    public Recycler_Adapter(Context activity, ArrayList<Task_Object> list){
         this.context = activity;
         this.masterList = list;
     }
@@ -51,23 +52,23 @@ public class Recycler_Adapter extends RecyclerView.Adapter<Recycler_Adapter.card
     public void onBindViewHolder(Recycler_Adapter.card_holder holder, int position) {
         //SET DATA FOR VIEW HOLDER
         holder.masterList = masterList.get(position);
-        holder.holder_dob.setText(masterList.get(position)[2]); //SET DOB
-        holder.holder_due.setText(masterList.get(position)[3]); //SET DUE
+        holder.holder_dob.setText(masterList.get(position).dobDate); //SET DOB
+        holder.holder_due.setText(masterList.get(position).dueDate); //SET DUE
         Settings_Holder settings_holder = new Settings_Holder(context);
         String pastDueKey = settings_holder.getPastDueKey();
-        if (pastDueChecker(masterList.get(position)[3]) && settings_holder.getBoolSettings(pastDueKey)){
+        if (pastDueChecker(masterList.get(position).dueDate) && settings_holder.getBoolSettings(pastDueKey)){
             holder.holder_card.setCardBackgroundColor(Color.RED);
         }
-        holder.holder_priority.setImageResource(priorityFilter(masterList.get(position)[4])); //PRIORITY
-        holder.holder_task.setText(masterList.get(position)[5]); //TASK
+        holder.holder_priority.setImageResource(priorityFilter(masterList.get(position).priority)); //PRIORITY
+        holder.holder_task.setText(masterList.get(position).body); //TASK
     }
 
     /*
     PRIORITY COLOR FILTER <CONVERTS STRING VALUE TO COLOR>
      */
-    public int priorityFilter(String priority){
-        int value = Integer.valueOf(priority);
-        switch (value){
+    public int priorityFilter(int priority){
+//        int value = Integer.valueOf(priority);
+        switch (priority){
             case 0:
                 return R.color.neutral;
             case 1:
@@ -114,7 +115,7 @@ public class Recycler_Adapter extends RecyclerView.Adapter<Recycler_Adapter.card
         private TextView holder_dob;
         private TextView holder_due;
         private TextView holder_task;
-        private String[] masterList;
+        private Task_Object masterList;
 
 
         public card_holder(View view) {
@@ -134,8 +135,8 @@ public class Recycler_Adapter extends RecyclerView.Adapter<Recycler_Adapter.card
             MainActivity activity = (MainActivity) context;
             int frag = activity.getCurrentFragNum();
             Intent intent = new Intent(context, DetailActivity.class);
-            intent.putExtra("TITLE", masterList[1]);
-            intent.putExtra("TASK", masterList);
+            intent.putExtra("TITLE", masterList.listName);
+            intent.putExtra("TASK", (Serializable) masterList);
             intent.putExtra("FRAG", frag);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, holder_card, context.getString(R.string.detail_transition));
@@ -152,7 +153,7 @@ public class Recycler_Adapter extends RecyclerView.Adapter<Recycler_Adapter.card
         public boolean onLongClick(View v) {
             Log.i("CARD_HOLDER", "ON LONG CLICK PRESSED");
             MainActivity mainActivity = (MainActivity) context;
-            mainActivity.expandBottomSheet(masterList[0]);
+            mainActivity.expandBottomSheet(masterList.rowID);
             return true;
         }
     }

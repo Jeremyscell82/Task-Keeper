@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.bitbytebitcreations.tasks.utilz.Task_Object;
+
 
 /**
  * Created by JeremysMac on 6/8/16.
@@ -36,20 +38,20 @@ public class DB_Adapter extends AppCompatActivity {
     public static final String[] TITLES_KEYS = new String[] {KEY_ID, KEY_TITLE};
 
     //USER COLUMN NAMES
-    public static final String KEY_LIST = "list";
+    public static final String KEY_LIST_ID = "list";
     public static final String KEY_DOB = "dob";
     public static final String KEY_DUE = "due";
     public static final String KEY_PRIORITY = "priority";
     public static final String KEY_TASK = "task";
     //USER KEY LIST
-    public static final String[] USER_KEYS = new String[] {KEY_ID, KEY_LIST, KEY_DOB, KEY_DUE, KEY_PRIORITY, KEY_TASK};
+    public static final String[] USER_KEYS = new String[] {KEY_ID, KEY_LIST_ID, KEY_DOB, KEY_DUE, KEY_PRIORITY, KEY_TASK};
 
     //SETTINGS COLUMN NUMBERS
     public static final int KEY_COL_TITLE = 1;
 
 
     //USER COLUMN NUMBERS - USER
-    public static final int KEY_COL_LIST = 1;
+    public static final int KEY_COL_LIST_ID = 1;
     public static final int KEY_COL_DOB = 2;
     public static final int KEY_COL_DUE = 3;
     public static final int KEY_COL_PRIORITY = 4;
@@ -66,7 +68,7 @@ public class DB_Adapter extends AppCompatActivity {
     private static final String CREATE_TASK_TABLE = "CREATE TABLE " + TABLE_TASKS
             + " (" +
             KEY_ID + " integer primary key autoincrement, " +
-            KEY_LIST + " TEXT NOT NULL, " +
+            KEY_LIST_ID + " TEXT NOT NULL, " +
             KEY_DOB + " TEXT NOT NULL, " +
             KEY_DUE + " TEXT NOT NULL, " +
             KEY_PRIORITY + " TEXT NOT NULL, " +
@@ -94,7 +96,7 @@ public class DB_Adapter extends AppCompatActivity {
     /*
     INSERT ROW
      */
-    public void addRowTasks(String[] tasks){ //INSERTS A ROW
+    public void addRowTasks(Task_Object tasks){ //INSERTS A ROW
         ContentValues initialValues = new ContentValues();
         //THIS IS THE USERS DATABASE
         initialValues = userValues(initialValues, tasks);
@@ -112,13 +114,14 @@ public class DB_Adapter extends AppCompatActivity {
     /*
     UPDATE ROW
      */
-    public void updateRow(long rowID, String[] task){
+    public void updateRow(long rowID, Task_Object task){
         String where = KEY_ID + "=" + rowID;
         ContentValues initialValues = new ContentValues();
         initialValues = userValues(initialValues, task);
         DB.update(TABLE_TASKS
                 , initialValues, where, null);
     }
+
     public void updateTitles(long rowID, String setting){
         String where = KEY_ID + "=" + rowID;
         ContentValues initialValues = new ContentValues();
@@ -191,12 +194,12 @@ public class DB_Adapter extends AppCompatActivity {
         return initialValues;
     }
 
-    public ContentValues userValues(ContentValues initialValues, String[] myTask){
-        initialValues.put(KEY_LIST, myTask[0]);
-        initialValues.put(KEY_DOB, myTask[1]);
-        initialValues.put(KEY_DUE, myTask[2]);
-        initialValues.put(KEY_PRIORITY, myTask[3]);
-        initialValues.put(KEY_TASK, myTask[4]);
+    public ContentValues userValues(ContentValues initialValues, Task_Object task){
+        initialValues.put(KEY_LIST_ID, task.listName);
+        initialValues.put(KEY_DOB, task.dobDate);
+        initialValues.put(KEY_DUE, task.dueDate);
+        initialValues.put(KEY_PRIORITY, task.priority);
+        initialValues.put(KEY_TASK, task.body);
         return initialValues;
     }
 

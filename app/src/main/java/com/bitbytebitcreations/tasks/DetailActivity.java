@@ -17,8 +17,10 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 
 import com.bitbytebitcreations.tasks.utilz.Settings_Holder;
+import com.bitbytebitcreations.tasks.utilz.Task_Object;
 import com.bitbytebitcreations.tasks.utilz.Theme_Applier;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -60,7 +62,7 @@ public class DetailActivity extends AppCompatActivity {
         //GET PASSED IN DATA
         boolean newTask = getIntent().getBooleanExtra("NEW", false);
         String title = getIntent().getStringExtra("TITLE");
-        String[] task = getIntent().getStringArrayExtra("TASK");
+        Task_Object task = (Task_Object) getIntent().getSerializableExtra("TASK");
         frag = getIntent().getIntExtra("FRAG", 0);
         Log.i("TEST", "FRAG: " + frag);
 //        if (newTask)getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE); //ENABLE KEYBOARD
@@ -73,12 +75,12 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
-    public void loadTask(boolean newTask, String title, String[] task){
+    public void loadTask(boolean newTask, String title, Task_Object task){
         DetailFragment fragment = new DetailFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean("NEW", newTask);
         bundle.putString("TITLE", title);
-        bundle.putStringArray("TASK", task);
+        bundle.putSerializable("TASK", (Serializable) task);
         bundle.putInt("FRAG", frag);
         fragment.setArguments(bundle);
         FragmentTransaction ft = getFragmentManager().beginTransaction();

@@ -171,8 +171,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /* ===========EXPAND BOTTOM SHEET=============*/
-    public void expandBottomSheet(String rowID){
-        this.ROWID = Long.parseLong(rowID);
+    public void expandBottomSheet(long rowID){
+        this.ROWID = rowID;
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.hide();
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -252,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
         controller.closeDB();
 
 //        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+
         int fragNum;
         if (mTitleList != null){
             fragNum = mTitleList.length;
