@@ -45,7 +45,7 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
     int whcDate;
     int mPriority; //0 = NEUTRAL & 3 = HIGH
     //UI
-    String mListName;
+    String[] mListName;
     long mTaskID;
     EditText mTask;
     TextView mTaskDOB;
@@ -84,16 +84,17 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
         Bundle bundle = getArguments();
         if (bundle != null){
             mIsNewTask = bundle.getBoolean("NEW");
-            mListName = bundle.getString("TITLE");
+
             mFrag = bundle.getInt("FRAG");
-            Log.i(TAG, "MASTER LIST: "+ mListName);
             if (mIsNewTask){
                 //SET UP AS NEW
+                mListName = (String[]) bundle.getSerializable("TITLE");
                 setUpAsNew();
             } else {
                 //SET UP FROM DB - BUNDLE
                 Task_Object task = (Task_Object) bundle.getSerializable("TASK"); //CONTAINS ID
                 Log.i(TAG, "TASK ID: " + task.rowID);
+                mListName = new String[]{String.valueOf(task.listID), task.listName};
                 mTaskID = task.rowID;
                 setUpFromDB(task);
             }
@@ -219,23 +220,11 @@ public class DetailFragment extends Fragment implements DatePickerDialog.OnDateS
      ==============================================================================================*/
     public void saveTask(){
         Task_Object task = new Task_Object();
-        task.setListName(mListName);
+        task.setListID(Long.parseLong(mListName[0]));
         task.setDobDate((String) mTaskDOB.getText());
         task.setPriority(mPriority);
         task.setDueDate((String) mTaskDUE.getText());
         task.setTask(mTask.getText().toString());
-
-
-
-
-//        String lis = mListName;
-//        String dob = (String) mTaskDOB.getText();
-//        String due = (String) mTaskDUE.getText();
-//        String pri = String.valueOf(mPriority);
-//        String tas = mTask.getText().toString();
-//        String[] task = new String[]{lis, dob, due, pri, tas};
-
-
         controller.openDB(getActivity());
         if (mIsNewTask){
             controller.addTask(task);

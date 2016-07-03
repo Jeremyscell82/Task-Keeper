@@ -103,4 +103,14 @@ public class Settings_Holder extends AppCompatActivity{
         editor.apply();
     }
 
+
+    /*
+    CLEAR SETTINGS
+     */
+    public void clearSettings(){
+        SharedPreferences preferences = context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+    }
+
 }

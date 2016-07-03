@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Task Keeper</string>
-    <string name="version">A_0.8</string>
-    <string name="devStage">ALPHA</string>
+    <string name="version">B_0.9</string>
+    <string name="devStage">BETA</string>
     
 
     <!--MENU ITEMS-->
@@ -32,6 +32,7 @@
     <string name="set_del_usure">Choose a list to delete</string>
     <string name="set_del_all">Delete ALL lists</string>
     <string name="set_reset">Reset settings (does not effect tasks)</string>
+    <string name="set_reset_confirm">Settings have been reset</string>
 
 
     <!--TOAST MESSAGES-->

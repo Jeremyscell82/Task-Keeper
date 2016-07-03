@@ -19,6 +19,7 @@ import com.bitbytebitcreations.tasks.utilz.Settings_Holder;
 import com.bitbytebitcreations.tasks.utilz.Task_Object;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by JeremysMac on 6/11/16.
@@ -31,7 +32,7 @@ public class ViewPager_Frag  extends Fragment{
     boolean mFAB_isVisible;
     RecyclerView myRecycler;
     ArrayList<Task_Object> masterList;
-    private String[] mTitle;
+    private ArrayList<String[]> mTitle;
 
 
     @Nullable
@@ -43,12 +44,15 @@ public class ViewPager_Frag  extends Fragment{
         //GET BUNDLE
         Bundle bundle = getArguments();
         if (bundle != null){
-            mTitle = bundle.getStringArray("TITLE");
+            mTitle = (ArrayList<String[]>) bundle.getSerializable("TITLE"); //CONTAINS ROWID AND TITLE
+            //GET ORDER STYLE FROM SHARED PREFERENCES
+            Settings_Holder settings_holder = new Settings_Holder(getActivity());
+
             masterList = (ArrayList<Task_Object>) bundle.getSerializable("TASKS"); //FILTERED FOR THIS LIST
+            
         }
         //GET SAVED SETTINGS
         hideFabCheck();
-
 
         mFAB = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         mFAB_isVisible = true;
@@ -81,12 +85,6 @@ public class ViewPager_Frag  extends Fragment{
             }
         });
 
-
-
-
-
-
-
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,7 +93,7 @@ public class ViewPager_Frag  extends Fragment{
                 ActivityOptions options = ActivityOptions.makeCustomAnimation(getContext(), R.anim.slide_in_top, R.anim.fade_out);
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra("FRAG", currFrag);
-                intent.putExtra("TITLE", mTitle[currFrag]); //GETS LISTNAME
+                intent.putExtra("TITLE", mTitle.get(currFrag)); //GETS LISTNAME
                 intent.putExtra("NEW", true);
                 startActivity(intent, options.toBundle());
                 mFAB.hide();
@@ -109,25 +107,7 @@ public class ViewPager_Frag  extends Fragment{
     public void onResume() {
         super.onResume();
         hideFabCheck();
-        //TODO SHOW FAB NOT WORKING
-        Log.i("TEST", "TEST ON RESUME");
-//        fabDelay();
     }
-
-
-//    public void reloadData(){
-//        //GET FRAGMENT TITLE
-//        ViewPager pager = (ViewPager) getActivity().findViewById(R.id.viewPager);
-//        int currFrag = pager.getCurrentItem();
-//        //SET UP MASTER LIST
-//        masterList.clear();
-//        masterList = new ArrayList<>();
-//        //CALL DB
-//        DB_Controller controller = new DB_Controller();
-//        controller.openDB(getActivity());
-//        masterList = controller.getAllTasks(mTitle[currFrag]);
-//        controller.closeDB();
-//    }
 
     public void hideFabCheck(){
         Settings_Holder settings_holder = new Settings_Holder(getContext());

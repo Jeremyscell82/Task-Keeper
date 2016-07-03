@@ -197,12 +197,13 @@ public class SettingsActivity extends AppCompatActivity {
                 showDeleteDialog();
             }
         });
+
         assert resetSettings != null;
-        resetSettings.setTextColor(Color.GRAY);
         resetSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("RESET SETTINGS");
+                settings_holder.clearSettings();
+                showToast(getString(R.string.set_del_confirm));
             }
         });
 
@@ -267,28 +268,6 @@ public class SettingsActivity extends AppCompatActivity {
     }/*END OF MENU*/
 
 
-    public void showThemeDialog(){
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.theme_dialog, null);
-        dialogBuilder.setView(dialogView);
-
-        dialogBuilder.setTitle(R.string.addlist_dialog_title);
-        dialogBuilder.setMessage(R.string.addlist_dialog_hint);
-        dialogBuilder.setPositiveButton(R.string.addlist_dialog_create, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                //do something with edt.getText().toString();
-            }
-        });
-        dialogBuilder.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                //pass
-            }
-        });
-        AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
-    }
-
     /*================================
     ============APP THEME============
     ================================*/
@@ -343,7 +322,6 @@ public class SettingsActivity extends AppCompatActivity {
     //APPLY NEW THEME
     public void applyTheme(int theme){
         if (currTheme != theme){
-//            Settings_Holder settings_holder = new Settings_Holder(this);
             settings_holder.setINTSettings("THEME", theme);
             masterRefresh();
         }
@@ -432,8 +410,8 @@ public class SettingsActivity extends AppCompatActivity {
     public void showTitleDialog(final boolean delete){
         showToast(getString(R.string.set_del_warning));
         String[] dialogTitle;
-        final ArrayList<String[]> masterList = getTitles();
-        final String[] titles = filterTitles(masterList);
+        final ArrayList<String[]> titleList = getTitles();
+        final String[] titles = filterTitles(titleList);
         if (delete){
             dialogTitle = getResources().getStringArray(R.array.set_del_dialog);
         } else {
@@ -446,13 +424,11 @@ public class SettingsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         int selected = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
-//                        Log.i(TAG, "TESTING : " + masterList.size());
-//                        showToast(masterList.get(1)[selected]);
-                        long rowID = Long.parseLong(masterList.get(selected)[0]);
+                        long rowID = Long.parseLong(titleList.get(selected)[0]);
                         if (delete){
-                            deleteTitle(rowID, masterList.get(selected)[1]);
+                            deleteTitle(rowID, titleList.get(selected)[1]); //GET TITLE NAME FOR TOAST
                         } else {
-                            showEditDialog(rowID, masterList.get(selected)[1]);
+                            showEditDialog(rowID, titleList.get(1)[1]); //GET TITLE NAME FOR TOAST
                         }
 
                     }
@@ -476,7 +452,6 @@ public class SettingsActivity extends AppCompatActivity {
         final EditText listName = (EditText) dialogView.findViewById(R.id.titleName);
 
         dialogBuilder.setTitle(editDialog[0]);
-//        dialogBuilder.setMessage(R.string.addlist_dialog_hint);
         dialogBuilder.setPositiveButton(editDialog[2], new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 //do something with edt.getText().toString();
@@ -525,7 +500,7 @@ public class SettingsActivity extends AppCompatActivity {
     public void deleteTitle(long rowID, String title){
         DB_Controller db = new DB_Controller();
         db.openDB(this);
-        db.deleteTitle(rowID, title);
+        db.deleteTitle(rowID);
         db.closeDB();
         String message = title + " " + getString(R.string.set_del_confirm);
         showToast(message);
@@ -535,7 +510,7 @@ public class SettingsActivity extends AppCompatActivity {
         DB_Controller db = new DB_Controller();
         db.openDB(this);
         //UPDATE TITLE DB
-        db.updateTitle(rowID, title, oldTitle);
+        db.updateTitle(rowID, title);
         db.closeDB();
         String message = oldTitle + " " + getString(R.string.set_edit_confirm) + " " + title;
         showToast(message);
@@ -588,11 +563,11 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            finish();
-            overridePendingTransition(R.anim.fade_in, R.anim.scale_to_corner);
-        } else {
-            super.onBackPressed();
-        }
+        //RETURN TO HOME + REFRESH VIEWPAGERS
+        //END AND RESTART THE ACTVIITY
+        finish();
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 }

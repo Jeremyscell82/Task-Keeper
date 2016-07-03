@@ -29,14 +29,9 @@ import java.util.ArrayList;
 public class DetailActivity extends AppCompatActivity {
 
     final String TAG = "DETAIL_ACTIVITY";
-    FloatingActionButton mFAB;
-
-    boolean EDIT_MODE;
-    MenuItem editMenu;
-    MenuItem saveMenu;
-    ArrayList<String[]> masterList;
     View mView;
     int frag;
+    boolean mNewTask;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,26 +55,30 @@ public class DetailActivity extends AppCompatActivity {
         mView = findViewById(R.id.revealView);
 
         //GET PASSED IN DATA
-        boolean newTask = getIntent().getBooleanExtra("NEW", false);
-        String title = getIntent().getStringExtra("TITLE");
-        Task_Object task = (Task_Object) getIntent().getSerializableExtra("TASK");
+        mNewTask = getIntent().getBooleanExtra("NEW", false);
         frag = getIntent().getIntExtra("FRAG", 0);
-        Log.i("TEST", "FRAG: " + frag);
-//        if (newTask)getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE); //ENABLE KEYBOARD
+        String[] title;
+        Task_Object task = new Task_Object();
+        if (mNewTask){
+            title = (String[]) getIntent().getSerializableExtra("TITLE");
+        } else {
+            task = (Task_Object) getIntent().getSerializableExtra("TASK");
+            title = new String[]{String.valueOf(task.listID), task.listName};
+        }
 
-        getSupportActionBar().setTitle(title);
 
-        loadTask(newTask, title, task);
 
+        getSupportActionBar().setTitle(title[1]);
+        loadTask(mNewTask, title, task);
 
     }
 
 
-    public void loadTask(boolean newTask, String title, Task_Object task){
+    public void loadTask(boolean newTask, String[] title, Task_Object task){
         DetailFragment fragment = new DetailFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean("NEW", newTask);
-        bundle.putString("TITLE", title);
+        bundle.putSerializable("TITLE", title);
         bundle.putSerializable("TASK", (Serializable) task);
         bundle.putInt("FRAG", frag);
         fragment.setArguments(bundle);
@@ -111,7 +110,17 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (mNewTask){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.fade_in, R.anim.scale_to_center);
+        } else {
+            super.onBackPressed();
+        }
+
+
+
     }
 
 
@@ -185,4 +194,7 @@ public class DetailActivity extends AppCompatActivity {
 ////        launchSatellite();
 //
 //    }
+
+
+
 }

@@ -133,9 +133,10 @@ public class Recycler_Adapter extends RecyclerView.Adapter<Recycler_Adapter.card
         @Override
         public void onClick(View v) {
             MainActivity activity = (MainActivity) context;
+//            String[] title = {String.valueOf(masterList.listID), masterList.listName};
             int frag = activity.getCurrentFragNum();
             Intent intent = new Intent(context, DetailActivity.class);
-            intent.putExtra("TITLE", masterList.listName);
+//            intent.putStringArrayListExtra("TITLE", );
             intent.putExtra("TASK", (Serializable) masterList);
             intent.putExtra("FRAG", frag);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){

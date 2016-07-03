@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     BottomSheetBehavior bottomSheetBehavior;
     DB_Controller controller;
     ViewPager mViewPager;
-    String[] mTitleList;
+    ArrayList<String[]> mTitleList;
     long ROWID;
 
 
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //IF NO LISTS..SHOW USER THE DIALOG
-        if (mTitleList == null)showDialog();
+        if (mTitleList.size() == 0)showDialog();
 
         /* GET SAVED SETTINGS */
         //SET THEME
@@ -248,45 +248,56 @@ public class MainActivity extends AppCompatActivity {
      */
     public void saveTitle(String title){
         controller.openDB(this);
-        controller.addTitle(title);
+        long rowID = controller.addTitle(title);
         controller.closeDB();
 
 //        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
 
         int fragNum;
         if (mTitleList != null){
-            fragNum = mTitleList.length;
+            fragNum = mTitleList.size();
         } else {
             fragNum = 0;
         }
-        Log.i("TEST", "FRAG NUM IS: --> "+fragNum);
-        Toast.makeText(this, title+" has been created.", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra("TITLE", title);
-        intent.putExtra("NEW", true);
-        intent.putExtra("FRAG", fragNum);
-        startActivity(intent);
+//        if (rowID == -1){
+////            rowID = 0;
+//        }
+        if (rowID >= 0){
+            String[] listName = {String.valueOf(rowID), title};
+            Log.i("TEST", "FRAG NUM IS: --> "+fragNum);
+            Toast.makeText(this, title+" has been created.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra("TITLE", listName);
+            intent.putExtra("NEW", true);
+            intent.putExtra("FRAG", fragNum);
+            startActivity(intent);
+        } else {
+            Log.e(TAG, "ERROR OCCURED WITH WRITE TO DATABASE");
+        }
     }
 
-    public String[] getTitles(){
+    public ArrayList<String[]> getTitles(){
+//        ArrayList<String[]> masterList = new ArrayList<>();
         controller.openDB(this);
         ArrayList<String[]> masterList = controller.getAllTitles();
         controller.closeDB();
-        if (masterList != null){
-            List<String> titleList = new ArrayList<>();
-            for (int i = 0; i < masterList.size(); i++){
-                titleList.add(masterList.get(i)[1]);
-                Log.i(TAG, "RUNNING...");
-            }
-            if (titleList.size() != 0){
-                String[] titles = new String[titleList.size()];
-                titles = titleList.toArray(titles);
-                return titles;
-            }
-        }
 
-        Log.i(TAG, "NO TITLES SAVED...");
-        return null;
+//        if (masterList != null){
+//            List<String> titleList = new ArrayList<>();
+//            for (int i = 0; i < masterList.size(); i++){
+//                titleList.add(masterList.get(i)[1]);
+//                Log.i(TAG, "RUNNING...");
+//            }
+//            if (titleList.size() != 0){
+//                String[] titles = new String[titleList.size()];
+//                titles = titleList.toArray(titles);
+//                return titles;
+//            }
+//        }
+
+//        Log.i(TAG, "NO TITLES SAVED...");
+//        return null;
+        return masterList;
     }
 
     public void deleteTask(){

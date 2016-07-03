@@ -10,6 +10,8 @@ import android.util.Log;
 
 import com.bitbytebitcreations.tasks.utilz.Task_Object;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by JeremysMac on 6/8/16.
@@ -68,10 +70,10 @@ public class DB_Adapter extends AppCompatActivity {
     private static final String CREATE_TASK_TABLE = "CREATE TABLE " + TABLE_TASKS
             + " (" +
             KEY_ID + " integer primary key autoincrement, " +
-            KEY_LIST_ID + " TEXT NOT NULL, " +
+            KEY_LIST_ID + " INTEGER, " +
             KEY_DOB + " TEXT NOT NULL, " +
             KEY_DUE + " TEXT NOT NULL, " +
-            KEY_PRIORITY + " TEXT NOT NULL, " +
+            KEY_PRIORITY + " integer, " +
             KEY_TASK + " TEXT" + ");";
 
     //SQLIGHT HELPER
@@ -103,12 +105,12 @@ public class DB_Adapter extends AppCompatActivity {
         DB.insert(TABLE_TASKS
                 , null, initialValues);
     }
-    public void addRowTitles(String titles){
+    public long addRowTitles(String titles){
         ContentValues initialValues = new ContentValues();
         //THIS IS THE USERS DATABASE
         initialValues = titleValues(initialValues, titles);
-        DB.insert(TABLE_TITLES
-                , null, initialValues);
+        long result = DB.insert(TABLE_TITLES, null, initialValues);
+        return result;
     }
 
     /*
@@ -133,17 +135,23 @@ public class DB_Adapter extends AppCompatActivity {
     GET ALL ROWS
      */
     public Cursor getAllTaskRows(){
-        Cursor cursor = null;
-        cursor = DB.query(true, TABLE_TASKS
+        Cursor cursor = DB.query(true, TABLE_TASKS
                 , USER_KEYS, null, null, null, null, null, null);
         if (cursor != null){
             cursor.moveToFirst();
         }
         return cursor;
     }
+    public Cursor getTasksForListId(long listId){
+        Cursor cursor = DB.rawQuery("select * from " + TABLE_TASKS + " where " + KEY_LIST_ID + "=" + listId,null);
+        //Cursor cursor = DB.query(true, TABLE_TASKS , USER_KEYS, null, null, null, null, null, null);
+        if (cursor != null){
+            cursor.moveToFirst();
+        }
+        return cursor;
+    }
     public Cursor getAllTitleRows(){
-        Cursor cursor = null;
-        cursor = DB.query(true, TABLE_TITLES
+        Cursor cursor = DB.query(true, TABLE_TITLES
                 , TITLES_KEYS, null, null, null, null, null, null);
         if (cursor != null){
             cursor.moveToFirst();
@@ -195,7 +203,7 @@ public class DB_Adapter extends AppCompatActivity {
     }
 
     public ContentValues userValues(ContentValues initialValues, Task_Object task){
-        initialValues.put(KEY_LIST_ID, task.listName);
+        initialValues.put(KEY_LIST_ID, task.listID); //TODO NEEDS TO CHANGE TO LIST ID
         initialValues.put(KEY_DOB, task.dobDate);
         initialValues.put(KEY_DUE, task.dueDate);
         initialValues.put(KEY_PRIORITY, task.priority);

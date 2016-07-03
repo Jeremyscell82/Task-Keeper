@@ -31,10 +31,10 @@ import java.util.ArrayList;
 public class ViewPager_Controller extends FragmentStatePagerAdapter {
 
     String TAG = "VIEWPAGER";
-    String[] mTitles;
+    ArrayList<String[]> mTitles; //0 = ROW ID, 1 = TITLES
     Context context;
 
-    public ViewPager_Controller(FragmentManager fm, String[] titles, Context activity){
+    public ViewPager_Controller(FragmentManager fm, ArrayList<String[]> titles, Context activity){
         super(fm);
         this.mTitles = titles;
         this.context = activity;
@@ -46,10 +46,11 @@ public class ViewPager_Controller extends FragmentStatePagerAdapter {
         Fragment fragment = new ViewPager_Frag();
         DB_Controller controller = new DB_Controller();
         controller.openDB(context);
-        ArrayList<Task_Object> masterList = controller.getAllTasks(mTitles[position]);
+        long rowID = Long.parseLong(mTitles.get(position)[0]);
+        ArrayList<Task_Object> masterList = controller.getAllTasks(rowID);
         controller.closeDB();
         Bundle bundle = new Bundle();
-        bundle.putStringArray("TITLE", mTitles);
+        bundle.putSerializable("TITLE", mTitles);
         bundle.putSerializable("TASKS", masterList);
         fragment.setArguments(bundle);
         return fragment;
@@ -58,7 +59,7 @@ public class ViewPager_Controller extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         if (mTitles != null){
-            return mTitles.length;
+            return mTitles.size();
         } else {
             return 0;
         }
@@ -66,7 +67,7 @@ public class ViewPager_Controller extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mTitles[position];
+        return mTitles.get(position)[1];
     }
 
 }

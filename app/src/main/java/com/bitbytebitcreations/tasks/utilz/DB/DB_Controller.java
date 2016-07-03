@@ -36,36 +36,16 @@ public class DB_Controller extends AppCompatActivity {
     public void addTask(Task_Object values){
         DB.addRowTasks(values);
     }
-    public void addTitle(String title){
-        DB.addRowTitles(title);
+    public long addTitle(String title){
+        return DB.addRowTitles(title);
     }
     public void updateTask(long rowID, Task_Object values){
         DB.updateRow(rowID, values);
     }
-    public void updateTitle(long rowID, String title, String oldTitle){
+    public void updateTitle(long rowID, String title){
         DB.updateTitles(rowID, title);
-        //UPDATE TASK DB 'LIST'
-//        updateTaskTitles(title, oldTitle);
     }
-    //TODO REPLACE BY USING ROW ID FOR LIST NAME
-//    public void updateTaskTitles(String title, String oldTitle){
-//        ArrayList<String[]> masterList = getAllTasks(oldTitle);
-//        //FOR LOOP TO CHANGE EACH ENTRY
-//        DB.open();
-//        for (int i =0; masterList.size() > i; i++){
-//            String[] task = masterList.get(i);
-//            String[] newTask = {
-//                    title, //NEW TITLE
-//                    task[2],
-//                    task[3],
-//                    task[4],
-//                    task[5]
-//            };
-//            long rowID = Long.parseLong(task[0]);
-//            DB.updateRow(rowID, newTask);
-//        }
-//        DB.close();
-//    }
+
     /*
     DB READ
      */
@@ -88,37 +68,22 @@ public class DB_Controller extends AppCompatActivity {
         return db_List;
     }
 
-    public ArrayList<Task_Object> getAllTasks(String list_name){
-        Cursor cursor = DB.getAllTaskRows();
+    public ArrayList<Task_Object> getAllTasks(long list_id){
+        Cursor cursor = DB.getTasksForListId(list_id);
         ArrayList<Task_Object> db_List = new ArrayList<>();
         if (cursor.moveToFirst()){
-            Log.i("TEST", " CONTROLLER LIST BEING PULLED: " + cursor.getString(DB.KEY_COL_LIST_ID) + " COMPARE TO: " + list_name);
-                do {
-                    if (cursor.getString(DB.KEY_COL_LIST_ID).equalsIgnoreCase(list_name)){
-                        Task_Object task = new Task_Object();
-                        task.setRowID(cursor.getLong(DB.KEY_COL_ID));
-                        task.setListName(cursor.getString(DB.KEY_COL_LIST_ID));
-                        task.setDobDate( cursor.getString(DB.KEY_COL_DOB));
-                        task.setDueDate(cursor.getString(DB.KEY_COL_DUE));
-                        task.setPriority(cursor.getInt(DB.KEY_COL_PRIORITY));
-                        task.setTask(cursor.getString(DB.KEY_COL_TASK));
-
-
-//                        String[] task2 = new String[]{
-//                                String.valueOf(cursor.getInt(DB.KEY_COL_ID)),
-//                                cursor.getString(DB.KEY_COL_LIST_ID),
-//                                cursor.getString(DB.KEY_COL_DOB),
-//                                cursor.getString(DB.KEY_COL_DUE),
-//                                cursor.getString(DB.KEY_COL_PRIORITY),
-//                                cursor.getString(DB.KEY_COL_TASK)
-//                        };
-
-                        db_List.add(task);
-                    }
-                }while (cursor.moveToNext());
+//            Log.i("TEST", " CONTROLLER LIST BEING PULLED: " + cursor.getString(DB.KEY_COL_LIST_ID) + " COMPARE TO: " + list_id);
+            do {
+                Task_Object task = new Task_Object();
+                task.setRowID(cursor.getLong(DB.KEY_COL_ID));
+                task.setListID(cursor.getLong(DB.KEY_COL_LIST_ID));
+                task.setDobDate( cursor.getString(DB.KEY_COL_DOB));
+                task.setDueDate(cursor.getString(DB.KEY_COL_DUE));
+                task.setPriority(cursor.getInt(DB.KEY_COL_PRIORITY));
+                task.setTask(cursor.getString(DB.KEY_COL_TASK));
+                db_List.add(task);
+            }while (cursor.moveToNext());
         }
-        //TODO ORGANIZE LIST BASED ON DUE DATE
-//        Collections.reverse(db_List);
         cursor.close();
         return db_List;
     }
@@ -129,15 +94,14 @@ public class DB_Controller extends AppCompatActivity {
     public void deleteTask(long rowID){
         DB.deleteRow(rowID, false); //FALSE FOR TITLES
     }
-    public void deleteTitle(long rowID, String title){
+    public void deleteTitle(long rowID){
         //DELETE FROM TITLE DB
         DB.deleteRow(rowID, true); //TRUE FOR TITLES
-        ArrayList<Task_Object> masterList = getAllTasks(title);
+        ArrayList<Task_Object> masterList = getAllTasks(rowID);
         for (int i = 0; masterList.size() > i; i++){
             long currID = masterList.get(i).rowID;
             //DELETE FROM TASK DB
             DB.deleteRow(currID, false);
-//            Log.i(TAG, "COUNT EM....");
         }
     }
     //!!!!!MASTER RESET OF USER DATA!!!!!!
